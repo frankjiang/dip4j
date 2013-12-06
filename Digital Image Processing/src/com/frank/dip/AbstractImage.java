@@ -15,7 +15,7 @@ import java.awt.Dimension;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class AbstractImage implements java.io.Serializable
+public abstract class AbstractImage implements java.io.Serializable
 {
 	/**
 	 * serialVersionUID.
@@ -79,5 +79,50 @@ public class AbstractImage implements java.io.Serializable
 					String.format(
 							"The retrieved position of (%d,%d) is out of the image dimension(%d, %d).",
 							x, y, width, height));
+	}
+
+	/**
+	 * Returns the specified sub-image of the current image according the
+	 * specified coordinates.
+	 * 
+	 * @param x0
+	 *            the X-coordinate of the left-top anchor in the current image
+	 * @param y0
+	 *            the Y-coordinate of the left-top anchor in the current image
+	 * @param xt
+	 *            the X-coordinate of the right-bottom anchor in the current
+	 *            image
+	 * @param yt
+	 *            the Y-coordinate of the right-bottom anchor in the current
+	 *            image
+	 * @return the sub-image
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             if the coordinates are out of the image pixels range
+	 */
+	public abstract AbstractImage subImage(int x0, int y0, int xt, int yt)
+			throws ArrayIndexOutOfBoundsException;
+
+	/**
+	 * Returns the specified sub-image of the current image according the
+	 * specified coordinates.
+	 * 
+	 * @param x0
+	 *            the X-coordinate of the left-top anchor in the current image
+	 * @param y0
+	 *            the Y-coordinate of the left-top anchor in the current image
+	 * @param xt
+	 *            the X-coordinate of the right-bottom anchor in the current
+	 *            image
+	 * @param yt
+	 *            the Y-coordinate of the right-bottom anchor in the current
+	 *            image
+	 * @return the sub-image
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             if the anchors are out of the image pixels range
+	 */
+	public AbstractImage subImage(java.awt.Point leftTop,
+			java.awt.Point rightBottom) throws ArrayIndexOutOfBoundsException
+	{
+		return subImage(leftTop.x, leftTop.y, rightBottom.x, rightBottom.y);
 	}
 }

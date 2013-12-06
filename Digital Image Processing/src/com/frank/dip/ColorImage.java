@@ -630,4 +630,26 @@ public class ColorImage extends Image implements ColorScaleLevel
 		return (alpha[y][x] & 0xff) << 24 | (red[y][x] & 0xff) << 16
 				| (green[y][x] & 0xff) << 8 | (blue[y][x] & 0xff);
 	}
+
+	/**
+	 * @see com.frank.dip.AbstractImage#subImage(int, int, int, int)
+	 */
+	@Override
+	public ColorImage subImage(int x0, int y0, int xt, int yt)
+			throws ArrayIndexOutOfBoundsException
+	{
+		checkBounds(x0, y0);
+		checkBounds(xt, yt);
+		int width = xt - x0, height = yt - y0;
+		ColorImage image = new ColorImage(width, height);
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+			{
+				image.alpha[y][x] = alpha[y0 + y][x0 + x];
+				image.red[y][x] = red[y0 + y][x0 + x];
+				image.green[y][x] = green[y0 + y][x0 + x];
+				image.blue[y][x] = blue[y0 + y][x0 + x];
+			}
+		return image;
+	}
 }

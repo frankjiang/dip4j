@@ -302,4 +302,21 @@ public class GrayImage extends Image implements ColorScaleLevel
 		int g = data[y][x] & 0xff;
 		return 255 << 24 | g << 16 | g << 8 | g;
 	}
+
+	/**
+	 * @see com.frank.dip.AbstractImage#subImage(int, int, int, int)
+	 */
+	@Override
+	public GrayImage subImage(int x0, int y0, int xt, int yt)
+			throws ArrayIndexOutOfBoundsException
+	{
+		checkBounds(x0, y0);
+		checkBounds(xt - 1, yt - 1);
+		int width = xt - x0, height = yt - y0;
+		GrayImage image = new GrayImage(width, height);
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+				image.data[y][x] = data[y0 + y][x0 + x];
+		return image;
+	}
 }

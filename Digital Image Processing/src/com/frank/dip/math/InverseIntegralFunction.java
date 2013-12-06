@@ -59,7 +59,7 @@ public class InverseIntegralFunction implements Function
 			values[i] = r;
 			keys[i] = function.function(r);
 		}
-		// build integral image
+		// build integral
 		for (i = 1; i < values.length; i++)
 			keys[i] += keys[i - 1];
 		// mapping integral inputs and outputs

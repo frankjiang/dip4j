@@ -9,17 +9,23 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import com.frank.dip.ColorImage;
 import com.frank.dip.Image;
-
-import javax.swing.SwingConstants;
+import com.frank.swing.SwingUtils;
+import com.frank.sys.SystemUtils;
 
 /**
  * The image displaying dialog.
@@ -47,6 +53,14 @@ public class ImageDisplayDialog extends JDialog
 	 * The label to display the pixels information.
 	 */
 	private JLabel				lblPixels;
+	/**
+	 * The pop-up menu.
+	 */
+	private JPopupMenu			popupMenu;
+	/**
+	 * The menu item for copy the displaying image.
+	 */
+	private JMenuItem			mntmCopyImage;
 
 	/**
 	 * Construct an instance of <tt>ImageDisplayDialog</tt>.
@@ -67,6 +81,34 @@ public class ImageDisplayDialog extends JDialog
 	public ImageDisplayDialog(Window window, String title, boolean modal,
 			Image image)
 	{
+		this(window, title, modal, image, true, true);
+	}
+
+	/**
+	 * Construct an instance of <tt>ImageDisplayDialog</tt>.
+	 * 
+	 * @param window
+	 *            the parent window
+	 * @param title
+	 *            the title of the dialog
+	 * @param modal
+	 *            specifies whether dialog blocks input to other windows when
+	 *            shown; calling to <code>setModal(true)</code> is equivalent to
+	 *            <code>setModalityType(Dialog.DEFAULT_MODALITY_TYPE)</code>,
+	 *            and calling to <code>setModal(false)</code> is equvivalent to
+	 *            <code>setModalityType(Dialog.ModalityType.MODELESS)</code>
+	 * @param image
+	 *            the image to display
+	 * @param showPixelInfo
+	 *            <code>true</code> if need to display pixel information when
+	 *            the mouse is on the image
+	 * @param hidIfExit
+	 *            <code>true</code> if need to hid the pixel information
+	 *            displaying label when the mouse exits the image range
+	 */
+	public ImageDisplayDialog(Window window, String title, boolean modal,
+			Image image, boolean showPixelInfo, boolean hidIfExit)
+	{
 		super(window, String.format(
 				"%s%s",
 				title,
@@ -81,14 +123,35 @@ public class ImageDisplayDialog extends JDialog
 		canvas = new JLabel("");
 		canvas.setHorizontalAlignment(SwingConstants.CENTER);
 		JScrollPane scrollPane = new JScrollPane(canvas);
+		popupMenu = new JPopupMenu();
+		SwingUtils.addPopup(canvas, popupMenu);
+		mntmCopyImage = new JMenuItem("Copy Image");
+		mntmCopyImage.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				SystemUtils.setClipboardImage(ImageDisplayDialog.this.image
+						.restore());
+				SwingUtils.noticeMessage(canvas,
+						"The image has been copied to the system clipboard.");
+			}
+		});
+		popupMenu.add(mntmCopyImage);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		initialize();
+		initialize(showPixelInfo, hidIfExit);
 	}
 
 	/**
 	 * Initialize the settings.
+	 * 
+	 * @param showPixelInfo
+	 *            <code>true</code> if need to display pixel information when
+	 *            the mouse is on the image
+	 * @param hidIfExit
+	 *            <code>true</code> if need to hid the pixel information
+	 *            displaying label when the mouse exits the image range
 	 */
-	private void initialize()
+	private void initialize(boolean showPixelInfo, boolean hidIfExit)
 	{
 		if (image == null)
 		{
@@ -97,23 +160,33 @@ public class ImageDisplayDialog extends JDialog
 		}
 		else
 			canvas.setIcon(new javax.swing.ImageIcon(image.restore()));
-		canvas.addMouseMotionListener(new MouseMotionAdapter()
-		{
-			@Override
-			public void mouseMoved(MouseEvent e)
+		if (showPixelInfo)
+			canvas.addMouseMotionListener(new MouseMotionAdapter()
 			{
-				Point p = e.getPoint();
-				Dimension main = ((JLabel) e.getSource()).getSize();
-				int w0 = image.width();
-				int h0 = image.height();
-				int w = (w0 - main.width) / 2;
-				int h = (h0 - main.height) / 2;
-				p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
-				updateMouseMotion(p.x < 0 || p.y < 0 || p.x >= w0 || p.y >= h0 ? null
-						: p);
-			}
-		});
-		setBounds(0, 0, image.width() + 30, image.height() + 60);
+				@Override
+				public void mouseMoved(MouseEvent e)
+				{
+					Point p = e.getPoint();
+					Dimension main = ((JLabel) e.getSource()).getSize();
+					int w0 = image.width();
+					int h0 = image.height();
+					int w = (w0 - main.width) / 2;
+					int h = (h0 - main.height) / 2;
+					p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
+					updateMouseMotion(p.x < 0 || p.y < 0 || p.x >= w0
+							|| p.y >= h0 ? null : p);
+				}
+			});
+		if (hidIfExit)
+			canvas.addMouseListener(new MouseAdapter()
+			{
+				@Override
+				public void mouseExited(MouseEvent e)
+				{
+					lblPixels.setText("");
+				}
+			});
+		setBounds(0, 0, 227, 170);
 	}
 
 	/**
@@ -131,6 +204,7 @@ public class ImageDisplayDialog extends JDialog
 			lblPixels.setText("No Pixels");
 			return;
 		}
+		lblPixels.setVisible(true);
 		if (image instanceof ColorImage)
 		{
 			ColorImage ci = (ColorImage) image;

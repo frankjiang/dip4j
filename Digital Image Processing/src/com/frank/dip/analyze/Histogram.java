@@ -8,6 +8,7 @@ package com.frank.dip.analyze;
 
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
+import com.frank.dip.ColorScaleLevel;
 import com.frank.dip.GrayImage;
 import com.frank.dip.Image;
 import com.frank.math.MathUtils;
@@ -23,20 +24,24 @@ import com.frank.math.MathUtils;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public abstract class Histogram
+public abstract class Histogram implements ColorScaleLevel
 {
-	/**
-	 * The normal color scale level 256.
-	 */
-	public static final int	SCALE_LEVEL	= 256;
 	/**
 	 * The area of the source image.
 	 */
-	protected float			area;
+	protected float	area;
 	/**
 	 * The gray scale histogram.
 	 */
-	protected int[]			data;
+	protected int[]	data;
+	/**
+	 * The maximum scale value.
+	 */
+	protected int	maximum;
+	/**
+	 * The minimum scale value.
+	 */
+	protected int	minimum;
 
 	/**
 	 * Gray scale histogram.
@@ -100,6 +105,11 @@ public abstract class Histogram
 		 * Histogram of blue channel.
 		 */
 		protected int[]	blue;
+		/**
+		 * The maximum and minimum scale values of the RGB channel.
+		 */
+		protected int	maximumRed, maximumGreen, maximumBlue, minimumRed,
+				minimumGreen, minimumBlue;
 
 		/**
 		 * Construct an instance of <tt>HistogramColor</tt>.
@@ -112,10 +122,19 @@ public abstract class Histogram
 			if (image instanceof ColorImage)
 			{
 				ColorImage ci = (ColorImage) image;
-				// data = histogram(ci.getGrayArray());
-				red = histogram(ci.getRedArray());
-				green = histogram(ci.getGreenArray());
-				blue = histogram(ci.getBlueArray());
+				int[] pair = new int[2];
+				data = histogram(ci.getGrayArray(), pair);
+				minimum = pair[0];
+				maximum = pair[1];
+				red = histogram(ci.getRedArray(), pair);
+				minimumRed = pair[0];
+				maximumRed = pair[1];
+				green = histogram(ci.getGreenArray(), pair);
+				minimumGreen = pair[0];
+				maximumGreen = pair[1];
+				blue = histogram(ci.getBlueArray(), pair);
+				minimumBlue = pair[0];
+				maximumBlue = pair[1];
 			}
 		}
 
@@ -229,6 +248,66 @@ public abstract class Histogram
 			MathUtils.normalize(copy, max, min);
 			return copy;
 		}
+
+		/**
+		 * Returns the maximum red scale value.
+		 * 
+		 * @return the maximum red scale value.
+		 */
+		public int getMaximumRed()
+		{
+			return maximumRed;
+		}
+
+		/**
+		 * Returns the minimum red scale value.
+		 * 
+		 * @return the minimum red scale value.
+		 */
+		public int getMinimumRed()
+		{
+			return minimumRed;
+		}
+
+		/**
+		 * Returns the maximum green scale value.
+		 * 
+		 * @return the maximum green scale value.
+		 */
+		public int getMaximumGreen()
+		{
+			return maximumGreen;
+		}
+
+		/**
+		 * Returns the minimum green scale value.
+		 * 
+		 * @return the minimum green scale value.
+		 */
+		public int getMinimumGreen()
+		{
+			return minimumGreen;
+		}
+
+		/**
+		 * Returns the maximum blue scale value.
+		 * 
+		 * @return the maximum blue scale value.
+		 */
+		public int getMaximumBlue()
+		{
+			return maximumBlue;
+		}
+
+		/**
+		 * Returns the minimum blue scale value.
+		 * 
+		 * @return the minimum blue scale value.
+		 */
+		public int getMinimumBlue()
+		{
+			return minimumBlue;
+		}
 	}
 
 	/**
@@ -250,7 +329,10 @@ public abstract class Histogram
 			throw new IllegalArgumentException(String.format(
 					"Image type of class \"%s\" is not support yet.", image
 							.getClass().toString()));
-		data = histogram(pixels);
+		int[] pair = new int[2];
+		data = histogram(pixels, pair);
+		minimum = pair[0];
+		maximum = pair[1];
 	}
 
 	/**
@@ -318,13 +400,29 @@ public abstract class Histogram
 	 * 
 	 * @param pixels
 	 *            the histogram original data
+	 * @param pair
+	 *            the entry of minimum scale value and maximum scale value, if
+	 *            the array is <code>null</code> or its size is less than 2, the
+	 *            statistics has no effect.
 	 * @return the histogram
 	 */
-	protected static int[] histogram(int[] pixels)
+	protected static int[] histogram(int[] pixels, int[] pair)
 	{
-		int[] hist = new int[SCALE_LEVEL];
+		int[] hist = new int[COLOR_SCALE_LEVEL];
+		int min = COLOR_SCALE_LEVEL, max = 0;
 		for (int pixel : pixels)
+		{
 			hist[pixel]++;
+			if (pixel < min)
+				min = pixel;
+			if (pixel > max)
+				max = pixel;
+		}
+		if (pair != null && pair.length > 1)
+		{
+			pair[0] = min;
+			pair[1] = max;
+		}
 		return hist;
 	}
 
@@ -350,5 +448,25 @@ public abstract class Histogram
 	public float getArea()
 	{
 		return area;
+	}
+
+	/**
+	 * Returns the maximum scale value.
+	 * 
+	 * @return the maximum scale value.
+	 */
+	public int getMaximum()
+	{
+		return maximum;
+	}
+
+	/**
+	 * Returns the minimum scale value.
+	 * 
+	 * @return the minimum scale value.
+	 */
+	public int getMinimum()
+	{
+		return minimum;
 	}
 }

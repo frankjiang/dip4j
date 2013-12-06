@@ -366,7 +366,7 @@ public class HistogramDialog extends JDialog
 				r.height - 2 * MARGIN).contains(p))
 			return;
 		int i = p.x - r.x - MARGIN;
-		if (i < 0 && i >= Histogram.SCALE_LEVEL)
+		if (i < 0 && i >= Histogram.COLOR_SCALE_LEVEL)
 			return;
 		Color c, old = g.getColor();
 		FontMetrics fm = g.getFontMetrics();

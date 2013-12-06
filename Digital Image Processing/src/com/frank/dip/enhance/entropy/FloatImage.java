@@ -12,6 +12,7 @@ import com.frank.dip.Image;
 /**
  * TODO
  * <p>
+ * Unimplemented image.
  * </p>
  * 
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
@@ -160,5 +161,16 @@ public class FloatImage extends AbstractImage
 				size = (xt - x0) * (yt - y0);
 				data[y][x] = (d[yt + 1][xt + 1] - d[y0][x0]) / size;
 			}
+	}
+
+	/**
+	 * @see com.frank.dip.AbstractImage#subImage(int, int, int, int)
+	 */
+	@Override
+	public AbstractImage subImage(int x0, int y0, int xt, int yt)
+			throws ArrayIndexOutOfBoundsException
+	{
+		// TODO not implemented.
+		return null;
 	}
 }

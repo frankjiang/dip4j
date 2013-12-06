@@ -253,4 +253,26 @@ public class HSBImage extends Image
 				}
 		}
 	}
+
+	/**
+	 * @see com.frank.dip.AbstractImage#subImage(int, int, int, int)
+	 */
+	@Override
+	public HSBImage subImage(int x0, int y0, int xt, int yt)
+			throws ArrayIndexOutOfBoundsException
+	{
+		checkBounds(x0, y0);
+		checkBounds(xt, yt);
+		int width = xt - x0, height = yt - y0;
+		HSBImage image = new HSBImage(width, height);
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+			{
+				image.alpha[y][x] = alpha[y0 + y][x0 + x];
+				image.hue[y][x] = hue[y0 + y][x0 + x];
+				image.saturation[y][x] = saturation[y0 + y][x0 + x];
+				image.brightness[y][x] = brightness[y0 + y][x0 + x];
+			}
+		return image;
+	}
 }
