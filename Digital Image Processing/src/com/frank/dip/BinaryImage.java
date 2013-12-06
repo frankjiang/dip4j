@@ -157,8 +157,8 @@ public class BinaryImage extends Image
 	 */
 	public BinaryImage(boolean[][] binaryMatrix)
 	{
-		this.width = binaryMatrix.length;
-		this.height = binaryMatrix[0].length;
+		this.height = binaryMatrix.length;
+		this.width = binaryMatrix[0].length;
 		data = new boolean[height][width];
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)

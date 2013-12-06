@@ -18,9 +18,69 @@ package com.frank.dip.enhance.convolver;
 public class GeometricMeanKernel extends SingleKernel
 {
 	/**
+	 * Geometric mean kernel.
+	 * <table>
+	 * <tr align="right">
+	 * <td></td>
+	 * <td width="16%">|</td>
+	 * <td width="16%">1</td>
+	 * <td width="16%">1</td>
+	 * <td width="16%">1</td>
+	 * <td width="16%">|</td>
+	 * </tr>
+	 * <tr align="right">
+	 * <td>1/9&times;</td>
+	 * <td>|</td>
+	 * <td>1</td>
+	 * <td>1</td>
+	 * <td>1</td>
+	 * <td>|</td>
+	 * </tr>
+	 * <tr align="right" >
+	 * <td></td>
+	 * <td>|</td>
+	 * <td>1</td>
+	 * <td>1</td>
+	 * <td>1</td>
+	 * <td>|</td>
+	 * </tr>
+	 * </table>
+	 */
+	public static final int	KERNEL_9	= 9;
+	/**
+	 * Geometric mean kernel.
+	 * <table>
+	 * <tr align="right">
+	 * <td></td>
+	 * <td width="16%">|</td>
+	 * <td width="16%">1</td>
+	 * <td width="16%">2</td>
+	 * <td width="16%">1</td>
+	 * <td width="16%">|</td>
+	 * </tr>
+	 * <tr align="right">
+	 * <td>1/16&times;</td>
+	 * <td>|</td>
+	 * <td>2</td>
+	 * <td>4</td>
+	 * <td>2</td>
+	 * <td>|</td>
+	 * </tr>
+	 * <tr align="right" >
+	 * <td></td>
+	 * <td>|</td>
+	 * <td>1</td>
+	 * <td>2</td>
+	 * <td>1</td>
+	 * <td>|</td>
+	 * </tr>
+	 * </table>
+	 */
+	public static final int	KERNEL_16	= 16;
+	/**
 	 * The production of the geometric mean kernel.
 	 */
-	protected double	product;
+	protected double		product;
 
 	/**
 	 * Construct an instance of <tt>GeometricMeanKernel</tt>.
@@ -37,6 +97,32 @@ public class GeometricMeanKernel extends SingleKernel
 			values[i] = 1;
 		initialize(width, height, values);
 		product = values.length;
+	}
+
+	/**
+	 * Construct an instance of <tt>GeometricMeanKernel</tt>.
+	 * 
+	 * @param type
+	 *            the geometric mean kernel type
+	 * @see #KERNEL_9
+	 * @see #KERNEL_16
+	 */
+	public GeometricMeanKernel(int type)
+	{
+		switch (type)
+		{
+			case KERNEL_9:
+				initialize(3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+				product = 9;
+				break;
+			case KERNEL_16:
+				initialize(3, 3, 1, 2, 1, 2, 4, 2, 1, 2, 1);
+				product = 16;
+				break;
+			default:
+				throw new IllegalArgumentException(String.format(
+						"Unknown geometric smooth convolution type: %s", type));
+		}
 	}
 
 	/**

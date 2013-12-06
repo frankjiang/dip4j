@@ -1,24 +1,24 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
- * reserved. ArithmeticMeanKernel.java is PROPRIETARY/CONFIDENTIAL built in 2013.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * HarmonicMeanKernel.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
 package com.frank.dip.enhance.convolver;
 
 /**
- * Arithmetic mean filter kernel.
+ * Harmonic mean filter kernel.
  * <p>
  * <strong>Pattern</strong>:<br>
- * s(x,y) = 1/(w*h) * &sum;g(x,y)
+ * s(x,y) = w*h / (&sum;1/g(x,y))
  * </p>
  * 
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class ArithmeticMeanKernel extends SingleKernel
+public class HarmonicMeanKernel extends SingleKernel
 {
 	/**
-	 * Arithmetic mean kernel.
+	 * Harmonic mean kernel.
 	 * <table>
 	 * <tr align="right">
 	 * <td></td>
@@ -48,7 +48,7 @@ public class ArithmeticMeanKernel extends SingleKernel
 	 */
 	public static final int	KERNEL_9	= 9;
 	/**
-	 * Arithmetic mean kernel.
+	 * Harmonic mean kernel.
 	 * <table>
 	 * <tr align="right">
 	 * <td></td>
@@ -78,31 +78,32 @@ public class ArithmeticMeanKernel extends SingleKernel
 	 */
 	public static final int	KERNEL_16	= 16;
 	/**
-	 * The summary of the kernel values.
+	 * The summary of the harmonic mean kernel.
+	 * <p>
+	 * {@code summary} = &sum;coef/g(x,y)
+	 * </p>
 	 */
-	protected float			summary		= 0.0f;
+	protected double		summary;
 
 	/**
-	 * Construct an instance of whole 1 <tt>ArithmeticMeanKernel</tt> with
-	 * specified pattern dimension.
+	 * Construct an instance of <tt>HarmonicMeanKernel</tt>.
 	 * 
 	 * @param width
 	 *            the kernel pattern width
 	 * @param height
 	 *            the kernel pattern height
 	 */
-	public ArithmeticMeanKernel(int width, int height)
+	public HarmonicMeanKernel(int width, int height)
 	{
 		float[] values = new float[width * height];
 		for (int i = 0; i < values.length; i++)
 			values[i] = 1;
 		initialize(width, height, values);
-		summary = width * height;
+		summary = values.length;
 	}
 
 	/**
-	 * Construct an instance of <tt>ArithmeticMeanKernel</tt> with specified
-	 * kernel.
+	 * Construct an instance of <tt>HarmonicMeanKernel</tt>.
 	 * 
 	 * @param width
 	 *            the kernel pattern width
@@ -111,23 +112,24 @@ public class ArithmeticMeanKernel extends SingleKernel
 	 * @param values
 	 *            the kernel pattern values
 	 */
-	public ArithmeticMeanKernel(int width, int height, float... values)
+	public HarmonicMeanKernel(int width, int height, float... values)
 	{
 		initialize(width, height, values);
 		summary = 0;
 		for (int i = 0; i < values.length; i++)
-			summary += values[i];
+			summary += 1.0 / values[i];
+		// summary = 1 / summary;
 	}
 
 	/**
-	 * Construct an instance of <tt>ArithmeticMeanKernel</tt>.
+	 * Construct an instance of <tt>HarmonicMeanKernel</tt>.
 	 * 
 	 * @param type
-	 *            the arithmetic mean kernel type
+	 *            the harmonic mean kernel type
 	 * @see #KERNEL_9
 	 * @see #KERNEL_16
 	 */
-	public ArithmeticMeanKernel(int type)
+	public HarmonicMeanKernel(int type)
 	{
 		switch (type)
 		{
@@ -141,7 +143,7 @@ public class ArithmeticMeanKernel extends SingleKernel
 				break;
 			default:
 				throw new IllegalArgumentException(String.format(
-						"Unknown Linear smooth convolution type: %s", type));
+						"Unknown harmonic smooth convolution type: %s", type));
 		}
 	}
 
@@ -154,26 +156,32 @@ public class ArithmeticMeanKernel extends SingleKernel
 			return super.perform(pixels);
 		else
 		{
-			float k = 0.0f;
+			double sum = 0.0;
 			for (int i = 0; i < pixels.length && i < kernel.length; i++)
-				k += pixels[i] * kernel[i];
-			int v = Math.round(k / summary);
+				if (pixels[i] != 0)
+				{
+					if (kernel[i] == 1)
+						sum += 1.0 / pixels[i];
+					else
+						sum += kernel[i] / pixels[i];
+				}
+			long v = Math.round(summary / sum);
 			if (v < 0)
 				return 0;
 			else if (v < COLOR_SCALE_LEVEL)
-				return v;
+				return (int) v;
 			else
 				return COLOR_SCALE_LEVEL - 1;
 		}
 	}
 
 	/**
-	 * Set the summary of the mean kernel.
+	 * Set the summary of the kernel.
 	 * 
 	 * @param summary
-	 *            the summary value
+	 *            the product value
 	 */
-	public void setSummary(float summary)
+	public void setSummary(double summary)
 	{
 		if (summary <= 0)
 			throw new IllegalArgumentException(String.format(
