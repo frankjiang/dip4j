@@ -1,13 +1,6 @@
 package com.frank.dip.demo;
 
-import javax.imageio.ImageIO;
-import javax.swing.JDialog;
-
 import com.frank.dip.ColorScaleLevel;
-import com.frank.dip.GrayImage;
-import com.frank.dip.Image;
-import com.frank.dip.analyze.FourierTransformation;
-import com.frank.swing.SwingUtils;
 
 public class Test implements ColorScaleLevel
 {
@@ -108,20 +101,11 @@ public class Test implements ColorScaleLevel
 	 */
 	public static void main(String[] args) throws Exception
 	{
-		Image source = new GrayImage(ImageIO.read(Test.class
-				.getResourceAsStream(TEST_IMAGE_PATH)), null);
-		FourierTransformation ft = new FourierTransformation();
-		ft.forward(source);
-		GrayImage gi = ft.backward();
-		ImageDisplayDialog idd1 = new ImageDisplayDialog(null, "Source", false,
-				source);
-		ImageDisplayDialog idd2 = new ImageDisplayDialog(null, "Result", false,
-				gi);
-		SwingUtils.setSystemLookAndFeel(idd1);
-		SwingUtils.setSystemLookAndFeel(idd2);
-		idd1.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		idd2.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		idd1.setVisible(true);
-		idd2.setVisible(true);
+		double summary = 0.0;
+		int[] values = new int[] { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+		for (int i = 0; i < values.length; i++)
+			summary += (1.0 / values[i]);
+		System.out.println(summary);
+		System.out.println(1.0 / summary);
 	}
 }

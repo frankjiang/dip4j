@@ -61,6 +61,7 @@ import com.frank.dip.enhance.convolver.ArithmeticMeanKernel;
 import com.frank.dip.enhance.convolver.ConvolveDialog;
 import com.frank.dip.enhance.convolver.Convolver;
 import com.frank.dip.enhance.convolver.GeometricMeanKernel;
+import com.frank.dip.enhance.convolver.HarmonicMeanKernel;
 import com.frank.dip.enhance.convolver.Kernel;
 import com.frank.dip.enhance.convolver.KirschKernel;
 import com.frank.dip.enhance.convolver.LaplacianKernel;
@@ -134,10 +135,11 @@ public class DIPFrame extends JFrame implements Observer
 	 * The opened displaying windows.
 	 */
 	private java.util.Vector<java.awt.Window>	wins					= new java.util.Vector<java.awt.Window>();
+	// /com/frank/dip/res/lena-gray.png
 	/**
 	 * The image of test image.
 	 */
-	public static final String					TEST_IMAGE_PATH			= "/com/frank/dip/res/lena-gray.png";	//$NON-NLS-1$;
+	public static final String					TEST_IMAGE_PATH			= "/com/frank/dip/res/lena-gray.png";		// "/com/frank/dip/res/weak/0001.jpg";		//$NON-NLS-1$;
 	/**
 	 * serialVersionUID.
 	 */
@@ -149,7 +151,7 @@ public class DIPFrame extends JFrame implements Observer
 	/**
 	 * The short string of {@linkplain #timeunit}.
 	 */
-	private String								timeunitStr				= "ms";								//$NON-NLS-1$
+	private String								timeunitStr				= "ms";									//$NON-NLS-1$
 	/**
 	 * Current image file name.
 	 */
@@ -551,7 +553,7 @@ public class DIPFrame extends JFrame implements Observer
 		mnFilter.setMnemonic('I');
 		menuBar.add(mnFilter);
 		// initialize linear smooth filter menu
-		menuFilterLinearSmooth(mnFilter);
+		menuFilterNoise(mnFilter);
 		// initialize sharpen filter menu
 		menuFilterSharpen(mnFilter);
 		// initialize convolve enhance filter menu
@@ -935,13 +937,159 @@ public class DIPFrame extends JFrame implements Observer
 	}
 
 	/**
-	 * Initialize the linear smooth menu.
+	 * Initialize the noise filter menu.
 	 * 
 	 * @param mnFilter
 	 *            the filter menu
 	 */
-	private void menuFilterLinearSmooth(JMenuItem mnFilter)
+	private void menuFilterNoise(JMenuItem mnFilter)
 	{
+		JMenu mnNoiseFilter = new JMenu("Noise Filter");
+		mnFilter.add(mnNoiseFilter);
+		JMenuItem mnArithmeticMean = new JMenu("Arithmetic Mean");
+		mnNoiseFilter.add(mnArithmeticMean);
+		JMenuItem mntmLinearSmooth9 = new JMenuItem("9");
+		mntmLinearSmooth9.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				new Performance("Filter", "Arithmetic Mean 9")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						Kernel kernel = new ArithmeticMeanKernel(
+								ArithmeticMeanKernel.KERNEL_9);
+						Convolver conv = new Convolver(kernel);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = conv.operate(image);
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		mnArithmeticMean.add(mntmLinearSmooth9);
+		JMenuItem mntmLinearSmooth16 = new JMenuItem("16");
+		mntmLinearSmooth16.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				new Performance("Filter", "Arithmetic Mean 16")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						Kernel kernel = new ArithmeticMeanKernel(
+								ArithmeticMeanKernel.KERNEL_16);
+						Convolver conv = new Convolver(kernel);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = conv.operate(image);
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		mnArithmeticMean.add(mntmLinearSmooth16);
+		JMenu mnGeometricMean = new JMenu("Geometric Mean");
+		mnNoiseFilter.add(mnGeometricMean);
+		JMenuItem mntmGeometricMean9 = new JMenuItem("9");
+		mntmGeometricMean9.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				new Performance("Filter", "Geometric Mean 9")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						Kernel kernel = new GeometricMeanKernel(
+								GeometricMeanKernel.KERNEL_9);
+						Convolver conv = new Convolver(kernel);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = conv.operate(image);
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		mnGeometricMean.add(mntmGeometricMean9);
+		JMenuItem mntmGeometricMean16 = new JMenuItem("16");
+		mntmGeometricMean16.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				new Performance("Filter", "Geometric Mean 16")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						Kernel kernel = new GeometricMeanKernel(
+								GeometricMeanKernel.KERNEL_16);
+						Convolver conv = new Convolver(kernel);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = conv.operate(image);
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		mnGeometricMean.add(mntmGeometricMean16);
+		JMenu mnHarmonicMean = new JMenu("Harmonic Mean");
+		mnNoiseFilter.add(mnHarmonicMean);
+		JMenuItem mntmHarmonicMean9 = new JMenuItem("9");
+		mntmHarmonicMean9.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				new Performance("Filter", "Harmonic Mean 9")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						Kernel kernel = new HarmonicMeanKernel(
+								HarmonicMeanKernel.KERNEL_9);
+						Convolver conv = new Convolver(kernel);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = conv.operate(image);
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		mnHarmonicMean.add(mntmHarmonicMean9);
+		JMenuItem mntmHarmonicMean16 = new JMenuItem("16");
+		mntmHarmonicMean16.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				new Performance("Filter", "Harmonic Mean 16")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						Kernel kernel = new HarmonicMeanKernel(
+								HarmonicMeanKernel.KERNEL_16);
+						Convolver conv = new Convolver(kernel);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = conv.operate(image);
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		mnHarmonicMean.add(mntmHarmonicMean16);
 	}
 
 	/**
@@ -2004,103 +2152,6 @@ public class DIPFrame extends JFrame implements Observer
 	 */
 	private void menuFilterSharpen(JMenu mnFilter)
 	{
-		JMenu mnNoiseFilter = new JMenu("Noise Filter");
-		mnFilter.add(mnNoiseFilter);
-		JMenuItem mnArithmeticMean = new JMenu("Arithmetic Mean");
-		mnNoiseFilter.add(mnArithmeticMean);
-		JMenuItem mntmLinearSmooth9 = new JMenuItem("9");
-		mntmLinearSmooth9.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				new Performance("Filter", "Arithmetic Mean 9")
-				{
-					@Override
-					protected Image perform(Image image)
-					{
-						Kernel kernel = new ArithmeticMeanKernel(
-								ArithmeticMeanKernel.KERNEL_9);
-						Convolver conv = new Convolver(kernel);
-						Timer t = TestUtils.getTimer();
-						t.start();
-						Image res = conv.operate(image);
-						time = t.getTime(timeunit);
-						return res;
-					}
-				}.perform();
-			}
-		});
-		mnArithmeticMean.add(mntmLinearSmooth9);
-		JMenuItem mntmLinearSmooth16 = new JMenuItem("16");
-		mntmLinearSmooth16.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				new Performance("Filter", "Arithmetic Mean 16")
-				{
-					@Override
-					protected Image perform(Image image)
-					{
-						Kernel kernel = new ArithmeticMeanKernel(
-								ArithmeticMeanKernel.KERNEL_16);
-						Convolver conv = new Convolver(kernel);
-						Timer t = TestUtils.getTimer();
-						t.start();
-						Image res = conv.operate(image);
-						time = t.getTime(timeunit);
-						return res;
-					}
-				}.perform();
-			}
-		});
-		mnArithmeticMean.add(mntmLinearSmooth16);
-		JMenu mnGeometricMean = new JMenu("Geometric Mean");
-		mnNoiseFilter.add(mnGeometricMean);
-		JMenuItem mntmGeometricMean9 = new JMenuItem("9");
-		mntmGeometricMean9.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				new Performance("Filter", "Geometric Mean 9")
-				{
-					@Override
-					protected Image perform(Image image)
-					{
-						Kernel kernel = new GeometricMeanKernel(3, 3);
-						Convolver conv = new Convolver(kernel);
-						Timer t = TestUtils.getTimer();
-						t.start();
-						Image res = conv.operate(image);
-						time = t.getTime(timeunit);
-						return res;
-					}
-				}.perform();
-			}
-		});
-		mnGeometricMean.add(mntmGeometricMean9);
-		JMenuItem mntmGeometricMean16 = new JMenuItem("16");
-		mntmGeometricMean16.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				new Performance("Filter", "Geometric Mean 16")
-				{
-					@Override
-					protected Image perform(Image image)
-					{
-						Kernel kernel = new GeometricMeanKernel(3, 3, 1, 2, 1,
-								2, 4, 2, 1, 2, 1);
-						Convolver conv = new Convolver(kernel);
-						Timer t = TestUtils.getTimer();
-						t.start();
-						Image res = conv.operate(image);
-						time = t.getTime(timeunit);
-						return res;
-					}
-				}.perform();
-			}
-		});
-		mnGeometricMean.add(mntmGeometricMean16);
 		JMenu mnSharpen = new JMenu("Sharpen");
 		mnFilter.add(mnSharpen);
 		JMenuItem mntmSharpenLaplacian4 = new JMenuItem("Laplacian 4");
@@ -3944,6 +3995,7 @@ public class DIPFrame extends JFrame implements Observer
 		try
 		{
 			image = ImageUtils.createImage(file);
+			filename = file.getName();
 		}
 		catch (Exception e)
 		{
