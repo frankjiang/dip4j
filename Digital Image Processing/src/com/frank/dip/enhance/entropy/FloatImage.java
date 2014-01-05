@@ -10,7 +10,7 @@ import com.frank.dip.GrayImage;
 import com.frank.dip.Image;
 
 /**
- * TODO
+ * TODO Implement and add comments.
  * <p>
  * Unimplemented image.
  * </p>

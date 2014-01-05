@@ -174,7 +174,7 @@ public abstract class Histogram implements ColorScaleLevel
 		 * 
 		 * @return probability distribution function array
 		 */
-		public float[] getRedPDF()
+		public float[] getPDFRed()
 		{
 			return calculatePDF(red, area);
 		}
@@ -185,7 +185,7 @@ public abstract class Histogram implements ColorScaleLevel
 		 * 
 		 * @return probability distribution function array
 		 */
-		public float[] getGreenPDF()
+		public float[] getPDFGreen()
 		{
 			return calculatePDF(green, area);
 		}
@@ -196,9 +196,57 @@ public abstract class Histogram implements ColorScaleLevel
 		 * 
 		 * @return probability distribution function array
 		 */
-		public float[] getBluePDF()
+		public float[] getPDFBlue()
 		{
 			return calculatePDF(blue, area);
+		}
+
+		/**
+		 * Returns the accumulated (integral) array of the probability
+		 * distribution function (PDF) array of the red channel histogram.
+		 * <p>
+		 * The value of the array
+		 * <code>INT(k) = &int;PDF(x)dx = &sum;PDF(x), x&isin;[0,k];
+		 * </p>
+		 * 
+		 * @return the probability distribution accumulated function (integral)
+		 *         array
+		 */
+		public float[] getIntegralRed()
+		{
+			return calculateIntegral(getPDFRed());
+		}
+
+		/**
+		 * Returns the accumulated (integral) array of the probability
+		 * distribution function (PDF) array of the green channel histogram.
+		 * <p>
+		 * The value of the array
+		 * <code>INT(k) = &int;PDF(x)dx = &sum;PDF(x), x&isin;[0,k];
+		 * </p>
+		 * 
+		 * @return the probability distribution accumulated function (integral)
+		 *         array
+		 */
+		public float[] getIntegralGreen()
+		{
+			return calculateIntegral(getPDFGreen());
+		}
+
+		/**
+		 * Returns the accumulated (integral) array of the probability
+		 * distribution function (PDF) array of the blue channel histogram.
+		 * <p>
+		 * The value of the array
+		 * <code>INT(k) = &int;PDF(x)dx = &sum;PDF(x), x&isin;[0,k];
+		 * </p>
+		 * 
+		 * @return the probability distribution accumulated function (integral)
+		 *         array
+		 */
+		public float[] getIntegralBlue()
+		{
+			return calculateIntegral(getPDFBlue());
 		}
 
 		/**
@@ -336,7 +384,7 @@ public abstract class Histogram implements ColorScaleLevel
 	}
 
 	/**
-	 * Get the source histogram data of gray scale.
+	 * Returns the source histogram data of gray scale.
 	 * 
 	 * @return histogram data
 	 */
@@ -346,14 +394,49 @@ public abstract class Histogram implements ColorScaleLevel
 	}
 
 	/**
-	 * Get the probability distribution function array of the gray scale
-	 * histogram.
+	 * Returns the probability distribution function (PDF) array of the gray
+	 * scale histogram.
 	 * 
-	 * @return probability distribution function array
+	 * @return probability distribution array
 	 */
 	public float[] getPDF()
 	{
 		return calculatePDF(getData(), area);
+	}
+
+	/**
+	 * Returns the accumulated (integral) array of the probability distribution
+	 * function (PDF) array of the gray scale histogram.
+	 * <p>
+	 * The value of the array
+	 * <code>INT(k) = &int;PDF(x)dx = &sum;PDF(x), x&isin;[0,k];
+	 * </p>
+	 * 
+	 * @return the probability distribution accumulated function (integral)
+	 *         array
+	 */
+	public float[] getIntegral()
+	{
+		return calculateIntegral(calculatePDF(getData(), area));
+	}
+
+	/**
+	 * Calculate the accumulated (integral) array according to the specified
+	 * probability distribution function (PDF) array.
+	 * 
+	 * @param pdf
+	 *            the probability distribution function (PDF) array
+	 * @return the accumulated (integral) array
+	 */
+	protected float[] calculateIntegral(float[] pdf)
+	{
+		float[] integral = new float[pdf.length];
+		if (pdf.length <= 0)
+			return integral;
+		integral[0] = pdf[0];
+		for (int i = 1; i < pdf.length; i++)
+			integral[i] = integral[i - 1] + pdf[i];
+		return integral;
 	}
 
 	/**

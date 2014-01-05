@@ -18,7 +18,7 @@ import com.frank.dip.GrayImage;
  * See source paper at:<br>
  * Andreas E. Savakis. Adaptive document image thresholding using foreground and
  * background clustering. Proceedings of International Conference on Image
- * Processing ICIP98, 1998.
+ * Proceedings ICIP98, 1998.
  * </p>
  * 
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>

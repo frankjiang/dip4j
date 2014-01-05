@@ -152,9 +152,9 @@ public abstract class HistogramNormalization<T extends Image> extends
 			ColorImage result = source.clone();
 			Histogram.Color hist = (Histogram.Color) Histogram
 					.histogram(source);
-			float[] red = hist.getRedPDF();
-			float[] blue = hist.getBluePDF();
-			float[] green = hist.getGreenPDF();
+			float[] red = hist.getPDFRed();
+			float[] blue = hist.getPDFBlue();
+			float[] green = hist.getPDFGreen();
 			for (int i = 1; i < red.length; i++)
 			{
 				red[i] += red[i - 1];

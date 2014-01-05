@@ -162,7 +162,7 @@ public class HistogramDialog extends JDialog
 		setModal(modal);
 		this.hist = hist;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 650, 310);
+		setBounds(100, 100, 700, 310);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -374,47 +374,57 @@ public class HistogramDialog extends JDialog
 		int y = r.y + r.height / 3;
 		int x = r.x + r.width;
 		int max = fm.stringWidth("Green:");
+		int minV, maxV;
 		// paint gray channel if need
 		if (chckbxGray.isSelected())
 		{
+			minV = hist.getMinimum();
+			maxV = hist.getMaximum();
 			c = Color.BLACK;
 			g.setColor(c);
 			g.drawString("Gray:", x, y);
-			g.drawString(String.format("%d, Value: %d PDF: %.4f%%", i, gray[i],
-					grayPDF[i] * 100), x + max, y);
+			g.drawString(String.format("%d, Value: %d PDF: %.4f%%, [%d,%d]", i,
+					gray[i], grayPDF[i] * 100, minV, maxV), x + max, y);
 			y += d;
 		}
 		// return if the source image contains not color information
 		if (red == null)
 			return;
+		Histogram.Color histC = (Histogram.Color) hist;
 		// paint red channel if need
 		if (chckbxRed.isSelected())
 		{
+			minV = histC.getMinimumRed();
+			maxV = histC.getMaximumRed();
 			c = Color.RED;
 			g.setColor(c);
 			g.drawString("Red:", x, y);
-			g.drawString(String.format("%d, Value: %d PDF: %.4f%%", i, red[i],
-					redPDF[i] * 100), x + max, y);
+			g.drawString(String.format("%d, Value: %d PDF: %.4f%%, [%d,%d]", i,
+					red[i], redPDF[i] * 100, minV, maxV), x + max, y);
 			y += d;
 		}
 		// paint green channel if need
 		if (chckbxGreen.isSelected())
 		{
+			minV = histC.getMinimumGreen();
+			maxV = histC.getMaximumGreen();
 			c = Color.GREEN;
 			g.setColor(c);
 			g.drawString("Green:", x, y);
-			g.drawString(String.format("%d, Value: %d PDF: %.4f%%", i,
-					green[i], greenPDF[i] * 100), x + max, y);
+			g.drawString(String.format("%d, Value: %d PDF: %.4f%%, [%d,%d]", i,
+					green[i], greenPDF[i] * 100, minV, maxV), x + max, y);
 			y += d;
 		}
 		// paint blue channel if need
 		if (chckbxBlue.isSelected())
 		{
+			minV = histC.getMinimumBlue();
+			maxV = histC.getMaximumBlue();
 			c = Color.BLUE;
 			g.setColor(c);
 			g.drawString("Blue:", x, y);
-			g.drawString(String.format("%d, Value: %d PDF: %.4f%%", i, blue[i],
-					bluePDF[i] * 100), x + max, y);
+			g.drawString(String.format("%d, Value: %d PDF: %.4f%%, [%d,%d]", i, blue[i],
+					bluePDF[i] * 100, minV, maxV), x + max, y);
 			y += d;
 		}
 		g.setColor(old);
@@ -565,13 +575,13 @@ public class HistogramDialog extends JDialog
 			grayPDF = hc.getPDF().clone();
 			grayNPDF = grayPDF.clone();
 			red = hc.getRed().clone();
-			redPDF = hc.getRedPDF().clone();
+			redPDF = hc.getPDFRed().clone();
 			redNPDF = redPDF.clone();
 			green = hc.getGreen().clone();
-			greenPDF = hc.getGreenPDF().clone();
+			greenPDF = hc.getPDFGreen().clone();
 			greenNPDF = greenPDF.clone();
 			blue = hc.getBlue().clone();
-			bluePDF = hc.getBluePDF().clone();
+			bluePDF = hc.getPDFBlue().clone();
 			blueNPDF = bluePDF.clone();
 			float[] maxs = new float[] { MathUtils.maximum(redPDF),
 					MathUtils.maximum(grayPDF), MathUtils.maximum(greenPDF),
