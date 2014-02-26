@@ -22,8 +22,8 @@ import java.awt.geom.Point2D;
 public interface GeometryTransform
 {
 	/**
-	 * Perform the transformation to code>src</code> and stores the result in
-	 * code>dst</code>.
+	 * Perform the transformation to <code>src</code> and stores the result in
+	 * <code>dst</code>.
 	 * <p>
 	 * If <code>src</code> and <code>dst</code> are the same object, the input
 	 * point is correctly overwritten with the transformed point.
@@ -38,8 +38,8 @@ public interface GeometryTransform
 	public Point2D transform(Point2D src, Point2D dst);
 
 	/**
-	 * Perform the inverse transformation to code>src</code> and stores the
-	 * result in code>dst</code>.
+	 * Perform the inverse transformation to <code>src</code> and stores the
+	 * result in <code>dst</code>.
 	 * <p>
 	 * If <code>src</code> and <code>dst</code> are the same object, the input
 	 * point is correctly overwritten with the transformed point.

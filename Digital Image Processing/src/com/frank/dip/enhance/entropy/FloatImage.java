@@ -10,7 +10,7 @@ import com.frank.dip.GrayImage;
 import com.frank.dip.Image;
 
 /**
- * TODO Implement and add comments.
+ * TODO FloatImage: Implement and add comments.
  * <p>
  * Unimplemented image.
  * </p>

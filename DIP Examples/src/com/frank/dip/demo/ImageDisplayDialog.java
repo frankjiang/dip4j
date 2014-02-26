@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * ImageDisplayDialog.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
@@ -15,15 +16,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
 import com.frank.dip.ColorImage;
 import com.frank.dip.Image;
+import com.frank.dip.geom.Geometry;
 import com.frank.swing.SwingUtils;
 import com.frank.sys.SystemUtils;
 
@@ -46,6 +51,10 @@ public class ImageDisplayDialog extends JDialog
 	 */
 	private Image				image;
 	/**
+	 * The new image.
+	 */
+	private Image				newImage;
+	/**
 	 * The canvas to display the image.
 	 */
 	private JLabel				canvas;
@@ -54,13 +63,42 @@ public class ImageDisplayDialog extends JDialog
 	 */
 	private JLabel				lblPixels;
 	/**
-	 * The pop-up menu.
+	 * The tool bar.
 	 */
-	private JPopupMenu			popupMenu;
+	private JToolBar			toolBar;
 	/**
-	 * The menu item for copy the displaying image.
+	 * Copy image button.
 	 */
-	private JMenuItem			mntmCopyImage;
+	private JButton				btnCopyImage;
+	/**
+	 * The scale combo box.
+	 */
+	private JComboBox			comboBox;
+	/**
+	 * The current scale rate.
+	 */
+	private double				currentRate			= 1;
+	/**
+	 * The image title.
+	 */
+	private String				imageTitle;
+	/**
+	 * The geometry instance for scaling the image.
+	 */
+	private Geometry			geom;
+	/**
+	 * The button of rotate left.
+	 */
+	private JButton				btnRotateleft;
+	/**
+	 * The button of rotate right.
+	 */
+	private JButton				btnRotateright;
+	/**
+	 * The rotate degree from 0-3, means 0 degree to 270 degree.
+	 */
+	private int					rotate				= 0;
+	private JButton				btnReset;
 
 	/**
 	 * Construct an instance of <tt>ImageDisplayDialog</tt>.
@@ -77,6 +115,7 @@ public class ImageDisplayDialog extends JDialog
 	 *            <code>setModalityType(Dialog.ModalityType.MODELESS)</code>
 	 * @param image
 	 *            the image to display
+	 * @wbp.parser.constructor
 	 */
 	public ImageDisplayDialog(Window window, String title, boolean modal,
 			Image image)
@@ -116,6 +155,10 @@ public class ImageDisplayDialog extends JDialog
 						image.width(), image.height())));
 		setModal(modal);
 		this.image = image;
+		this.imageTitle = title;
+		newImage = image.clone();
+		geom = Geometry.getGeometry(image, Geometry.TYPE_BICUBIC,
+				Geometry.FILL_WITH_BLANK);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		lblPixels = new JLabel("");
 		lblPixels.setHorizontalAlignment(SwingConstants.LEFT);
@@ -123,22 +166,96 @@ public class ImageDisplayDialog extends JDialog
 		canvas = new JLabel("");
 		canvas.setHorizontalAlignment(SwingConstants.CENTER);
 		JScrollPane scrollPane = new JScrollPane(canvas);
-		popupMenu = new JPopupMenu();
-		SwingUtils.addPopup(canvas, popupMenu);
-		mntmCopyImage = new JMenuItem("Copy Image");
-		mntmCopyImage.addActionListener(new ActionListener()
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		toolBar = new JToolBar();
+		scrollPane.setColumnHeaderView(toolBar);
+		btnCopyImage = new JButton("");
+		btnCopyImage.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				SystemUtils.setClipboardImage(ImageDisplayDialog.this.image
-						.restore());
-				SwingUtils.noticeMessage(canvas,
-						"The image has been copied to the system clipboard.");
+				copyImage();
 			}
 		});
-		popupMenu.add(mntmCopyImage);
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		btnCopyImage.setIcon(new ImageIcon(ImageDisplayDialog.class
+				.getResource("/com/frank/dip/res/clipboard - copy.png")));//$NON-NLS-1$
+		btnCopyImage.setToolTipText("Copy the source image.");
+		toolBar.add(btnCopyImage);
+		btnRotateleft = new JButton("");
+		btnRotateleft
+				.setToolTipText("Left rotate the current image with 90 degree.");
+		btnRotateleft.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				newImage = geom.rotate(newImage, -Math.PI / 2);
+				rotate--;
+				rotate %= 4;
+				refreshImage();
+			}
+		});
+		btnRotateleft.setIcon(new ImageIcon(ImageDisplayDialog.class
+				.getResource("/com/frank/dip/res/undo.png")));
+		toolBar.add(btnRotateleft);
+		btnRotateright = new JButton("");
+		btnRotateright
+				.setToolTipText("Right rotate the current image with 90 degree.");
+		btnRotateright.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				newImage = geom.rotate(newImage, Math.PI / 2);
+				rotate++;
+				rotate %= 4;
+				refreshImage();
+			}
+		});
+		btnRotateright.setIcon(new ImageIcon(ImageDisplayDialog.class
+				.getResource("/com/frank/dip/res/redo.png")));
+		toolBar.add(btnRotateright);
+		btnReset = new JButton("");
+		btnReset.setToolTipText("Reset the current image to the source image.");
+		btnReset.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				newImage = ImageDisplayDialog.this.image;
+				rotate = 0;
+				currentRate = 1.0;
+				refreshImage();
+			}
+		});
+		btnReset.setIcon(new ImageIcon(ImageDisplayDialog.class
+				.getResource("/com/frank/dip/res/refresh-16.png")));
+		toolBar.add(btnReset);
+		comboBox = new JComboBox();
+		comboBox.setEditable(true);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] { "10%", "20%",
+				"50%", "100%", "150%", "200%", "300%", "1000%" }));
+		comboBox.setSelectedIndex(3);
+		comboBox.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				Object obj = comboBox.getSelectedItem();
+				if (obj == null)
+					return;
+				String s = ((String) obj).replaceAll("%", "");
+				Double rate = 1.0;
+				try
+				{
+					rate = Double.valueOf(s) / 100.0;
+					scaleImage(rate);
+				}
+				catch (NumberFormatException e1)
+				{
+					comboBox.setSelectedItem("100%");
+				}
+			}
+		});
+		toolBar.add(comboBox);
 		initialize(showPixelInfo, hidIfExit);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -168,8 +285,8 @@ public class ImageDisplayDialog extends JDialog
 				{
 					Point p = e.getPoint();
 					Dimension main = ((JLabel) e.getSource()).getSize();
-					int w0 = image.width();
-					int h0 = image.height();
+					int w0 = newImage.width();
+					int h0 = newImage.height();
 					int w = (w0 - main.width) / 2;
 					int h = (h0 - main.height) / 2;
 					p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
@@ -181,12 +298,33 @@ public class ImageDisplayDialog extends JDialog
 			canvas.addMouseListener(new MouseAdapter()
 			{
 				@Override
+				public void mouseEntered(MouseEvent e)
+				{
+					Point p = e.getPoint();
+					Dimension main = ((JLabel) e.getSource()).getSize();
+					int w0 = newImage.width();
+					int h0 = newImage.height();
+					int w = (w0 - main.width) / 2;
+					int h = (h0 - main.height) / 2;
+					p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
+					updateMouseMotion(p.x < 0 || p.y < 0 || p.x >= w0
+							|| p.y >= h0 ? null : p);
+					ImageDisplayDialog.this.validate();
+					int height = lblPixels.getHeight();
+					Dimension d = ImageDisplayDialog.this.getSize();
+					ImageDisplayDialog.this.setSize(d.width, d.height + height);
+				}
+
+				@Override
 				public void mouseExited(MouseEvent e)
 				{
+					int height = lblPixels.getHeight();
+					Dimension d = ImageDisplayDialog.this.getSize();
+					ImageDisplayDialog.this.setSize(d.width, d.height - height);
 					lblPixels.setText("");
 				}
 			});
-		setBounds(0, 0, 227, 170);
+		setBounds(0, 0, 328, 211);
 	}
 
 	/**
@@ -197,7 +335,7 @@ public class ImageDisplayDialog extends JDialog
 	 */
 	private void updateMouseMotion(Point point)
 	{
-		if (image == null)
+		if (newImage == null)
 			return;
 		if (point == null)
 		{
@@ -205,9 +343,9 @@ public class ImageDisplayDialog extends JDialog
 			return;
 		}
 		lblPixels.setVisible(true);
-		if (image instanceof ColorImage)
+		if (newImage instanceof ColorImage)
 		{
-			ColorImage ci = (ColorImage) image;
+			ColorImage ci = (ColorImage) newImage;
 			lblPixels
 					.setText(String.format("(%d,%d) - RGB(%d,%d,%d)", point.x,
 							point.y, ci.getRed(point.x, point.y),
@@ -216,6 +354,74 @@ public class ImageDisplayDialog extends JDialog
 		}
 		else
 			lblPixels.setText(String.format("(%d,%d) - Gray(%d)", point.x,
-					point.y, image.getPixel(point.x, point.y)));
+					point.y, newImage.getPixel(point.x, point.y)));
+	}
+
+	/**
+	 * Scale the image with specified rate.
+	 * 
+	 * @param rate
+	 *            the scale rate
+	 */
+	private void scaleImage(double rate)
+	{
+		if (rate == currentRate)
+			return;
+		currentRate = rate;
+		if (rotate % 4 != 0)
+		{
+			if (rate > 1)
+			{
+				newImage = geom.rotate(image, Math.PI / 2 * rotate);
+				newImage = geom.scaleByRate(newImage, rate);
+			}
+			else if (rate == 1)
+				newImage = geom.rotate(image, Math.PI / 2 * rotate);
+			else
+			{
+				newImage = geom.scaleByRate(image, rate);
+				newImage = geom.rotate(newImage, Math.PI / 2 * rotate);
+			}
+		}
+		else
+		{
+			if (rate != 1)
+				newImage = geom.scaleByRate(image, rate);
+			else
+				newImage = image;
+		}
+		refreshImage();
+	}
+
+	/**
+	 * Update the dialog title.
+	 */
+	private void updateTitle()
+	{
+		setTitle(String.format(
+				"%s%s",
+				imageTitle,
+				newImage == null ? "" : String.format(" - %d\u00d7%d",
+						newImage.width(), newImage.height())));
+	}
+
+	/**
+	 * Copy the current image to clip board.
+	 */
+	private void copyImage()
+	{
+		SystemUtils.setClipboardImage(image.restore());
+		SwingUtils.noticeMessage(canvas,
+				"The image has been copied to the system clipboard.");
+	}
+
+	/**
+	 * Refresh the image and update the title.
+	 */
+	private void refreshImage()
+	{
+		updateTitle();
+		canvas.setIcon(new javax.swing.ImageIcon(newImage.restore()));
+		Runtime.getRuntime().gc();// recycle the memory
 	}
 }

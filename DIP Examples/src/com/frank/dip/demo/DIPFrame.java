@@ -410,7 +410,7 @@ public class DIPFrame extends JFrame implements Observer
 	}
 
 	/**
-	 * XXX Test method.
+	 * Test method.
 	 */
 	private void test()
 	{

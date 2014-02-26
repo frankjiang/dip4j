@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * AbstractImage.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
@@ -29,6 +30,10 @@ public abstract class AbstractImage implements java.io.Serializable
 	 * The image height.
 	 */
 	protected int				height;
+	/**
+	 * The description of this image.
+	 */
+	protected String			description;
 
 	/**
 	 * Returns the width of the current image.
@@ -124,5 +129,26 @@ public abstract class AbstractImage implements java.io.Serializable
 			java.awt.Point rightBottom) throws ArrayIndexOutOfBoundsException
 	{
 		return subImage(leftTop.x, leftTop.y, rightBottom.x, rightBottom.y);
+	}
+
+	/**
+	 * Returns a comment string describe this image.
+	 * 
+	 * @return the comment string
+	 */
+	public String getDescription()
+	{
+		return description;
+	}
+
+	/**
+	 * Set the description of this image.
+	 * 
+	 * @param description
+	 *            the description string
+	 */
+	public void setDescription(String description)
+	{
+		this.description = description;
 	}
 }
