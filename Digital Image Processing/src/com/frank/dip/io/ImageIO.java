@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.FileImageOutputStream;
@@ -23,8 +25,9 @@ import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
 import com.frank.dip.Image;
-import com.frank.dip.io.format.ppm.PPMImageReader;
-import com.frank.dip.io.format.ppm.PPMImageWriter;
+import com.frank.dip.io.format.NetpbmFormat;
+import com.frank.dip.io.format.PPMImageReader;
+import com.frank.dip.io.format.PPMImageWriter;
 
 /**
  * The image I/O utilities.
@@ -40,11 +43,36 @@ public class ImageIO
 	/**
 	 * The extended service supported reading format.
 	 */
-	private static final String[]	supportedFormatRead		= { "ppm" };
+	private static final Set<String>	supportedFormatRead		= new TreeSet<String>();
 	/**
 	 * The extended service supported writing format.
 	 */
-	private static final String[]	supportedFormatWrite	= { "ppm" };
+	private static final Set<String>	supportedFormatWrite	= new TreeSet<String>();
+	// Initialize the supported formats.
+	static
+	{
+		for (String e : NetpbmFormat.SUPPORTED_FORMAT)
+		{
+			e = e.toLowerCase();
+			supportedFormatRead.add(e);
+			supportedFormatWrite.add(e);
+		}
+	}
+
+	/**
+	 * Read the image input stream and return the image instance it represents.
+	 * 
+	 * @param in
+	 *            the image input stream
+	 * @return the image instance
+	 * @throws IOException
+	 *             if I/O error occurred
+	 */
+	public static Image read(InputStream in, String formatName)
+			throws IOException
+	{
+		return read(new MemoryCacheImageInputStream(in), formatName);
+	}
 
 	/**
 	 * Returns the suffix of the specified filename string.
@@ -104,10 +132,7 @@ public class ImageIO
 	 */
 	public static boolean isExtendedReadSupported(String formatName)
 	{
-		for (String suffix : supportedFormatRead)
-			if (suffix.equals(formatName))
-				return true;
-		return false;
+		return supportedFormatRead.contains(formatName.toLowerCase());
 	}
 
 	/**
@@ -154,10 +179,7 @@ public class ImageIO
 	 */
 	public static boolean isExtendedWriteSupported(String formatName)
 	{
-		for (String suffix : supportedFormatWrite)
-			if (suffix.equals(formatName))
-				return true;
-		return false;
+		return supportedFormatWrite.contains(formatName.toLowerCase());
 	}
 
 	/**
@@ -171,22 +193,7 @@ public class ImageIO
 	 */
 	public static Image read(File file) throws IOException
 	{
-		return read(new FileImageInputStream(file), getSuffix(file.getName().toLowerCase()));
-	}
-
-	/**
-	 * Read the image input stream and return the image instance it represents.
-	 * 
-	 * @param in
-	 *            the image input stream
-	 * @return the image instance
-	 * @throws IOException
-	 *             if I/O error occurred
-	 */
-	public static Image read(InputStream in, String formatName)
-			throws IOException
-	{
-		return read(new MemoryCacheImageInputStream(in), formatName);
+		return read(new FileImageInputStream(file), getSuffix(file.getName()));
 	}
 
 	/**
@@ -206,6 +213,7 @@ public class ImageIO
 	public static Image read(ImageInputStream iis, String formatName)
 			throws IOException
 	{
+		formatName = formatName.toLowerCase();
 		if (isSystemReadSupported(formatName))
 		{
 			BufferedImage bi = javax.imageio.ImageIO.read(iis);
@@ -244,7 +252,8 @@ public class ImageIO
 	 */
 	public static ImageReader getImageReader(String formatName)
 	{
-		if ("ppm".equals(formatName))
+		if ("ppm".equals(formatName) || "pgm".equals(formatName)
+				|| "pbm".equals(formatName))
 			return new PPMImageReader();
 		return null;
 	}
@@ -261,7 +270,8 @@ public class ImageIO
 	 */
 	public static void write(File file, Image image) throws IOException
 	{
-		write(new FileImageOutputStream(file), image, getSuffix(file.getName().toLowerCase()));
+		write(new FileImageOutputStream(file), image, getSuffix(file.getName()
+				.toLowerCase()));
 	}
 
 	/**
@@ -327,7 +337,8 @@ public class ImageIO
 	 */
 	public static ImageWriter getImageWriter(String formatName)
 	{
-		if ("ppm".equals(formatName))
+		if ("ppm".equals(formatName) || "pgm".equals(formatName)
+				|| "pbm".equals(formatName))
 			return new PPMImageWriter();
 		return null;
 	}
