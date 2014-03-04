@@ -87,7 +87,7 @@ public class ImageIO
 	 */
 	public static String getSuffix(String s)
 	{
-		int idx = s.indexOf('.');
+		int idx = s.lastIndexOf('.');
 		return idx != -1 ? s.substring(idx + 1) : s;
 	}
 
