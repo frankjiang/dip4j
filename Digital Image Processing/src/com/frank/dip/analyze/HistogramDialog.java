@@ -423,8 +423,8 @@ public class HistogramDialog extends JDialog
 			c = Color.BLUE;
 			g.setColor(c);
 			g.drawString("Blue:", x, y);
-			g.drawString(String.format("%d, Value: %d PDF: %.4f%%, [%d,%d]", i, blue[i],
-					bluePDF[i] * 100, minV, maxV), x + max, y);
+			g.drawString(String.format("%d, Value: %d PDF: %.4f%%, [%d,%d]", i,
+					blue[i], bluePDF[i] * 100, minV, maxV), x + max, y);
 			y += d;
 		}
 		g.setColor(old);
@@ -599,7 +599,5 @@ public class HistogramDialog extends JDialog
 			grayPDF = redPDF = greenPDF = bluePDF = null;
 			grayNPDF = redNPDF = greenNPDF = blueNPDF = null;
 		}
-		// throw new IllegalArgumentException(String.format(
-		// "%s format is not supported", hist.getClass().toString()));
 	}
 }

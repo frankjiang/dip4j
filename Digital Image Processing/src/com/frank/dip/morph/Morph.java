@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * Morph.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
@@ -8,6 +9,7 @@ package com.frank.dip.morph;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 
 /**
@@ -223,11 +225,14 @@ public abstract class Morph<T extends Image>
 	 * @param type
 	 *            the type of morphology structure
 	 * @return the morphology operator
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 * @see #STRUCTURE_DIAMOND
 	 * @see #STRUCTURE_EIGHT_CORNER
 	 * @see #STRUCTURE_SQUARE
 	 */
 	public static Morph getMorph(Class<? extends Image> c, int type)
+			throws IllegalImageTypeException
 	{
 		if (c == BinaryImage.class)
 			return new MorphBinary(type);
@@ -235,9 +240,7 @@ public abstract class Morph<T extends Image>
 			return new MorphGray(type);
 		if (c == ColorImage.class)
 			return new MorphColor(type);
-		throw new IllegalArgumentException(String.format(
-				"Current morphology operator cannot support image type: %s",
-				c.toString()));
+		throw new IllegalImageTypeException(Morph.class, c);
 	}
 
 	/**
@@ -249,11 +252,14 @@ public abstract class Morph<T extends Image>
 	 * @param type
 	 *            the type of morphology structure
 	 * @return the morphology operator
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 * @see #STRUCTURE_DIAMOND
 	 * @see #STRUCTURE_EIGHT_CORNER
 	 * @see #STRUCTURE_SQUARE
 	 */
 	public static Morph getMorph(Image image, int type)
+			throws IllegalImageTypeException
 	{
 		if (image instanceof BinaryImage)
 			return new MorphBinary(type);
@@ -261,8 +267,6 @@ public abstract class Morph<T extends Image>
 			return new MorphGray(type);
 		if (image instanceof ColorImage)
 			return new MorphColor(type);
-		throw new IllegalArgumentException(String.format(
-				"Current morphology operator cannot support image type: %s",
-				image.getClass().toString()));
+		throw new IllegalImageTypeException(Morph.class, image.getClass());
 	}
 }

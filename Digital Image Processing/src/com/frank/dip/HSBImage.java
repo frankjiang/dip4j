@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * HSIImage.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
@@ -103,7 +104,8 @@ public class HSBImage extends Image
 		h = hue[y][x];
 		s = saturation[y][x];
 		b = brightness[y][x];
-		return (alpha[y][x] & 0xff) << 24 | (Color.HSBtoRGB(h, s, b) & 0xffffff);
+		return (alpha[y][x] & 0xff) << 24
+				| (Color.HSBtoRGB(h, s, b) & 0xffffff);
 	}
 
 	/**
@@ -234,8 +236,7 @@ public class HSBImage extends Image
 				}
 			for (int x = 0; x < width; x++)
 				for (int y = 0; y < height; y++)
-					brightness[y][x] = (brightness[y][x] - min)
-							/ (max - min);
+					brightness[y][x] = (brightness[y][x] - min) / (max - min);
 		}
 		else
 		{
@@ -274,5 +275,15 @@ public class HSBImage extends Image
 				image.brightness[y][x] = brightness[y0 + y][x0 + x];
 			}
 		return image;
+	}
+
+	/**
+	 * @deprecated In HSB image no combined HSB pixel value, therefore, this
+	 *             method has no effect.
+	 * @see com.frank.dip.Image#setPixel(int, int, double)
+	 */
+	@Override
+	public void setPixel(int x, int y, double value)
+	{
 	}
 }

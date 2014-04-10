@@ -8,6 +8,7 @@ package com.frank.dip.analyze;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.dip.enhance.GrayScaleCoefficient;
 import com.frank.math.Complex;
@@ -51,8 +52,10 @@ public class FourierTransformation
 	 * 
 	 * @param source
 	 *            the source image
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
-	public void complex(Image source)
+	public void complex(Image source) throws IllegalImageTypeException
 	{
 		width = source.width();
 		height = source.height();
@@ -62,10 +65,7 @@ public class FourierTransformation
 			complex = FFT2D.fft(createComplex(new GrayScaleCoefficient()
 					.operate((ColorImage) source)));
 		else
-			throw new IllegalArgumentException(
-					String.format(
-							"Current Fourier Transformation cannot support image type: %s",
-							source.getClass().toString()));
+			throw new IllegalImageTypeException(getClass(), source.getClass());
 	}
 
 	/**
@@ -74,8 +74,10 @@ public class FourierTransformation
 	 * @param source
 	 *            the source image
 	 * @return the frequency image
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
-	public GrayImage forward(Image source)
+	public GrayImage forward(Image source) throws IllegalImageTypeException
 	{
 		width = source.width();
 		height = source.height();
@@ -84,9 +86,7 @@ public class FourierTransformation
 		if (source instanceof ColorImage)
 			return perform(new GrayScaleCoefficient()
 					.operate((ColorImage) source));
-		throw new IllegalArgumentException(String.format(
-				"Current Fourier Transformation cannot support image type: %s",
-				source.getClass().toString()));
+		throw new IllegalImageTypeException(getClass(), source.getClass());
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.frank.dip.demo;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FileDialog;
@@ -12,7 +13,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -54,6 +54,10 @@ import com.frank.dip.demo.comp.MenuFile;
 import com.frank.dip.demo.comp.MenuFilter;
 import com.frank.dip.demo.comp.MenuGeometry;
 import com.frank.dip.demo.comp.MenuMorph;
+import com.frank.dip.enhance.convolver.Convolver;
+import com.frank.dip.enhance.convolver.GaussianBlurImprovedOperator;
+import com.frank.dip.enhance.convolver.GaussianBlurKernel;
+import com.frank.dip.geom.Geometry;
 import com.frank.dip.threshold.FBClustering;
 import com.frank.dip.threshold.FrankThresholding;
 import com.frank.dip.threshold.Fuzzy;
@@ -259,9 +263,17 @@ public class DIPFrame extends JFrame implements Observer
 		canvas.addMouseListener(new MouseAdapter()
 		{
 			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+				canvas.setCursor(Cursor
+						.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			}
+
+			@Override
 			public void mouseExited(MouseEvent e)
 			{
 				updateMouseMotion(null);
+				canvas.setCursor(Cursor.getDefaultCursor());
 			}
 		});
 		canvas.addMouseMotionListener(new MouseMotionAdapter()
@@ -416,19 +428,45 @@ public class DIPFrame extends JFrame implements Observer
 	{
 		new Performance("Test", "Test Method")
 		{
+			@SuppressWarnings("unused")
+			Image separate(Image image, double sigma)
+			{
+				GaussianBlurImprovedOperator op = new GaussianBlurImprovedOperator(
+						sigma);
+				return op.operate(image);
+			}
+
+			@SuppressWarnings("unused")
+			Image scale(Image image, double sigma, double theta)
+			{
+				Geometry geom = Geometry.getGeometry(image,
+						Geometry.TYPE_BICUBIC, Geometry.FILL_WITH_BLANK);
+				Convolver conv = new Convolver(new GaussianBlurKernel(7, 7,
+						(float) sigma), Convolver.HINT_ACCURACY_INTERRUPT,
+						Convolver.HINT_EDGE_SOURCE);
+				Image down = geom.scaleByRate(image, image.width() * theta,
+						image.height() * theta);
+				down = conv.operate(down);
+				return geom.scale(down, image.width(), image.height());
+			}
+
+			Image norm(Image image, double sigma)
+			{
+				Convolver conv = new Convolver(new GaussianBlurKernel(7, 7,
+						(float) sigma), Convolver.HINT_ACCURACY_INTERRUPT,
+						Convolver.HINT_EDGE_SOURCE);
+				return conv.operate(image);
+			}
+
 			@Override
 			protected Image perform(Image image)
 			{
-				if (!(image instanceof ColorImage))
-					throw new IllegalArgumentException("Not color image.");
-				ColorImage ci = (ColorImage) image;
-				Timer t = TestUtils.getTimer();
-				int value = 127;
-				for (int y = 0; y < ci.height(); y++)
-					for (int x = 0; x < ci.width(); x++)
-						ci.setAlpha(x, y, value);
-				time = t.getTime(timeunit);
-				return ci;
+				String sigmaStr = SwingUtils.inputDialog(DIPFrame.this,
+						"SIGMA", "Input sigma:", "2.0");
+				if (sigmaStr == null)
+					return null;
+				double sigma = Double.valueOf(sigmaStr);
+				return norm(image, sigma);
 			}
 		}.perform();
 	}
@@ -1135,8 +1173,9 @@ public class DIPFrame extends JFrame implements Observer
 				updateStep();
 			}
 		});
+		int controlKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		mntmUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-				InputEvent.CTRL_MASK));
+				controlKey));
 		mnEdit.add(mntmUndo);
 		mntmRedo = new JMenuItem("Redo");
 		mntmRedo.setIcon(new ImageIcon(DIPFrame.class
@@ -1153,7 +1192,7 @@ public class DIPFrame extends JFrame implements Observer
 			}
 		});
 		mntmRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-				InputEvent.CTRL_MASK));
+				controlKey));
 		mnEdit.add(mntmRedo);
 		mntmCopy = new JMenuItem("Copy");
 		mntmCopy.setIcon(new ImageIcon(DIPFrame.class
@@ -1168,7 +1207,7 @@ public class DIPFrame extends JFrame implements Observer
 			}
 		});
 		mntmCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				InputEvent.CTRL_MASK));
+				controlKey));
 		mnEdit.add(mntmCopy);
 		mntmPaste = new JMenuItem("Paste");
 		mntmPaste.setIcon(new ImageIcon(DIPFrame.class
@@ -1195,7 +1234,7 @@ public class DIPFrame extends JFrame implements Observer
 			}
 		});
 		mntmPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				InputEvent.CTRL_MASK));
+				controlKey));
 		mnEdit.add(mntmPaste);
 		updateStep();
 	}
@@ -1471,7 +1510,16 @@ public class DIPFrame extends JFrame implements Observer
 			Image image = current();
 			if (image == null)
 				return;
-			Image res = perform(image);
+			Image res = null;
+			try
+			{
+				res = perform(image);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				SwingUtils.errorMessage(DIPFrame.this, e.getLocalizedMessage());
+			}
 			if (res != null)
 			{
 				updateCommentByFunc(String.format("<%s> %s", title, content),

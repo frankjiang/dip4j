@@ -10,6 +10,7 @@ import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.ColorScaleLevel;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.math.MathUtils;
 
@@ -362,8 +363,11 @@ public abstract class Histogram implements ColorScaleLevel
 	 * Construct an instance of <tt>Histogram</tt>.
 	 * 
 	 * @param image
+	 *            the source image
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
-	public Histogram(Image image)
+	public Histogram(Image image) throws IllegalImageTypeException
 	{
 		int width = image.width();
 		int height = image.height();
@@ -374,9 +378,7 @@ public abstract class Histogram implements ColorScaleLevel
 		else if (image instanceof BinaryImage || image instanceof GrayImage)
 			pixels = image.getPixelsArray();
 		if (pixels == null)
-			throw new IllegalArgumentException(String.format(
-					"Image type of class \"%s\" is not support yet.", image
-							.getClass().toString()));
+			throw new IllegalImageTypeException(getClass(), image.getClass());
 		int[] pair = new int[2];
 		data = histogram(pixels, pair);
 		minimum = pair[0];

@@ -6,7 +6,6 @@
  */
 package com.frank.dip;
 
-
 /**
  * The digital image processing operator.
  * <p>

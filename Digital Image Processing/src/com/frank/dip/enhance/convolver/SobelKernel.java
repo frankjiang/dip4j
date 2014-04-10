@@ -5,7 +5,6 @@
  */
 package com.frank.dip.enhance.convolver;
 
-
 /**
  * Sobel operator.
  * <p>

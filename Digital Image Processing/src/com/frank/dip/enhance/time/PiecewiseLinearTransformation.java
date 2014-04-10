@@ -11,6 +11,7 @@ import java.util.Properties;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.math.StraightLine;
 
@@ -340,11 +341,11 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 	 * @param by
 	 *            y-coordinate of the second point
 	 * @return the transformed image
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> T piecewiseLinear(T source, double ax,
-			double ay, double bx, double by) throws IllegalArgumentException
+			double ay, double bx, double by) throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return (T) (new Gray(ax, ay, bx, by).operate((GrayImage) source));
@@ -353,10 +354,8 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 					.operate((BinaryImage) source));
 		if (source instanceof ColorImage)
 			return (T) (new Color(ax, ay, bx, by).operate((ColorImage) source));
-		throw new IllegalArgumentException(
-				String.format(
-						"Current piecewise linear transformation cannot support image type: %s",
-						source.getClass().toString()));
+		throw new IllegalImageTypeException(
+				PiecewiseLinearTransformation.class, source.getClass());
 	}
 
 	/**
@@ -374,12 +373,12 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 	 * @param by
 	 *            y-coordinate of the second point
 	 * @return the transformation
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> PiecewiseLinearTransformation<T> getPiecewiseLinearTransformation(
 			Class<T> type, double ax, double ay, double bx, double by)
-			throws IllegalArgumentException
+			throws IllegalImageTypeException
 	{
 		if (type == GrayImage.class)
 			return (PiecewiseLinearTransformation<T>) new Gray(ax, ay, bx, by);
@@ -387,10 +386,8 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 			return (PiecewiseLinearTransformation<T>) new Binary(ax, ay, bx, by);
 		if (type == ColorImage.class)
 			return (PiecewiseLinearTransformation<T>) new Color(ax, ay, bx, by);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current piecewise linear transformation cannot support image type: %s",
-						type.toString()));
+		throw new IllegalImageTypeException(
+				PiecewiseLinearTransformation.class, type);
 	}
 
 	/**
@@ -408,12 +405,12 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 	 * @param by
 	 *            y-coordinate of the second point
 	 * @return the transformation
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> PiecewiseLinearTransformation<T> getInversePiecewiseLinearTransformation(
 			Class<T> type, double ax, double ay, double bx, double by)
-			throws IllegalArgumentException
+			throws IllegalImageTypeException
 	{
 		if (type == GrayImage.class)
 			return (PiecewiseLinearTransformation<T>) new Gray(ay, ax, by, bx);
@@ -421,10 +418,8 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 			return (PiecewiseLinearTransformation<T>) new Binary(ay, ax, by, bx);
 		if (type == ColorImage.class)
 			return (PiecewiseLinearTransformation<T>) new Color(ay, ax, by, bx);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current piecewise linear transformation cannot support image type: %s",
-						type.toString()));
+		throw new IllegalImageTypeException(
+				PiecewiseLinearTransformation.class, type);
 	}
 
 	/**
@@ -441,12 +436,12 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 	 * @param by
 	 *            y-coordinate of the second point
 	 * @return the transformed image
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> T inversePiecewiseLinear(T source,
 			double ax, double ay, double bx, double by)
-			throws IllegalArgumentException
+			throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return (T) (new Gray(ay, ax, by, bx).operate((GrayImage) source));
@@ -455,9 +450,7 @@ public abstract class PiecewiseLinearTransformation<T extends Image> extends
 					.operate((BinaryImage) source));
 		if (source instanceof ColorImage)
 			return (T) (new Color(ay, ax, by, bx).operate((ColorImage) source));
-		throw new IllegalArgumentException(
-				String.format(
-						"Current piecewise linear transformation cannot support image type: %s",
-						source.getClass().toString()));
+		throw new IllegalImageTypeException(
+				PiecewiseLinearTransformation.class, source.getClass());
 	}
 }

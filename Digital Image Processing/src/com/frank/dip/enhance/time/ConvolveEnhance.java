@@ -9,6 +9,7 @@ import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.ColorScaleLevel;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.dip.Operator;
 import com.frank.dip.enhance.convolver.Kernel;
@@ -102,9 +103,11 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 
 	/**
 	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	@Override
-	public T operate(T source)
+	public T operate(T source) throws IllegalImageTypeException
 	{
 		if (source instanceof BinaryImage)
 			return (T) source.clone();
@@ -130,9 +133,7 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 					return (T) convolveColorWithNormalize((ColorImage) source);
 			}
 		}
-		throw new IllegalArgumentException(String.format(
-				"Current convolver %s cannot support image type: %s",
-				getClass().toString(), source.getClass().toString()));
+		throw new IllegalImageTypeException(getClass(), source.getClass());
 	}
 
 	/**

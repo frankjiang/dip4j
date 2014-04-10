@@ -102,6 +102,7 @@ public class Quadratic implements Function
 	{
 		return toFunction();
 	}
+
 	/**
 	 * @see com.frank.dip.math.Function#toFunction()
 	 */

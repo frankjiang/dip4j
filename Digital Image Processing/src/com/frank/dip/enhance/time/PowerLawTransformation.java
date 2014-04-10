@@ -10,6 +10,7 @@ import java.util.Properties;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 
 /**
@@ -707,11 +708,11 @@ public abstract class PowerLawTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transformed image
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> T poweLaw(T source, double c, double gamma,
-			double b) throws IllegalArgumentException
+			double b) throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return (T) (new Gray(c, gamma, b).operate((GrayImage) source));
@@ -719,10 +720,8 @@ public abstract class PowerLawTransformation<T extends Image> extends
 			return (T) (new Binary(c, gamma, b).operate((BinaryImage) source));
 		if (source instanceof ColorImage)
 			return (T) (new Color(c, gamma, b).operate((ColorImage) source));
-		throw new IllegalArgumentException(
-				String.format(
-						"Current power-law transformationation cannot support image type: %s",
-						source.getClass().toString()));
+		throw new IllegalImageTypeException(PowerLawTransformation.class,
+				source.getClass());
 	}
 
 	/**
@@ -741,12 +740,12 @@ public abstract class PowerLawTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transform
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> PowerLawTransformation<T> getPowerLawTransformation(
 			Class<T> type, double c, double gamma, double b)
-			throws IllegalArgumentException
+			throws IllegalImageTypeException
 	{
 		if (type == GrayImage.class)
 			return (PowerLawTransformation<T>) new Gray(c, gamma, b);
@@ -754,10 +753,7 @@ public abstract class PowerLawTransformation<T extends Image> extends
 			return (PowerLawTransformation<T>) new Binary(c, gamma, b);
 		if (type == ColorImage.class)
 			return (PowerLawTransformation<T>) new Color(c, gamma, b);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current power-law transformationation cannot support image type: %s",
-						type.toString()));
+		throw new IllegalImageTypeException(PowerLawTransformation.class, type);
 	}
 
 	/**
@@ -777,12 +773,12 @@ public abstract class PowerLawTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transform
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static PowerLawTransformation inversePowerLawTransformation(
 			Image source, double c, double gamma, double b)
-			throws IllegalArgumentException
+			throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return new InverseGray(c, gamma, b);
@@ -790,10 +786,8 @@ public abstract class PowerLawTransformation<T extends Image> extends
 			return new Binary(c, gamma, b);
 		if (source instanceof ColorImage)
 			return new InverseColor(c, gamma, b);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current power-law transformationation cannot support image type: %s",
-						source.getClass().toString()));
+		throw new IllegalImageTypeException(PowerLawTransformation.class,
+				source.getClass());
 	}
 
 	/**
@@ -810,11 +804,11 @@ public abstract class PowerLawTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transformed image
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> T inversePowerLaw(T source, double c,
-			double gamma, double b) throws IllegalArgumentException
+			double gamma, double b) throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return (T) (new InverseGray(c, gamma, b)
@@ -824,9 +818,7 @@ public abstract class PowerLawTransformation<T extends Image> extends
 		if (source instanceof ColorImage)
 			return (T) (new InverseColor(c, gamma, b)
 					.operate((ColorImage) source));
-		throw new IllegalArgumentException(
-				String.format(
-						"Current power-law transformationation cannot support image type: %s",
-						source.getClass().toString()));
+		throw new IllegalImageTypeException(PowerLawTransformation.class,
+				source.getClass());
 	}
 }

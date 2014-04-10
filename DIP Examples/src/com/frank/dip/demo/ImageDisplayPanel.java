@@ -8,6 +8,7 @@
 package com.frank.dip.demo;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -327,8 +328,10 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 					int height = lblPixels.getHeight();
 					Dimension d = ImageDisplayPanel.this.getSize();
 					ImageDisplayPanel.this.setSize(d.width, d.height + height);
-					observable.notifyObservers(height);
+					ImageDisplayPanel.this.setCursor(Cursor
+							.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 					observable.setChanged();
+					observable.notifyObservers(height);
 				}
 
 				@Override
@@ -337,8 +340,9 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 					int height = lblPixels.getHeight();
 					Dimension d = ImageDisplayPanel.this.getSize();
 					ImageDisplayPanel.this.setSize(d.width, d.height - height);
-					observable.notifyObservers(-height);
+					ImageDisplayPanel.this.setCursor(Cursor.getDefaultCursor());
 					observable.setChanged();
+					observable.notifyObservers(-height);
 					lblPixels.setText("");//$NON-NLS-1$
 				}
 			});

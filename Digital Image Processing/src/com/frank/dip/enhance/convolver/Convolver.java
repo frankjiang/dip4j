@@ -7,7 +7,9 @@ package com.frank.dip.enhance.convolver;
 
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
+import com.frank.dip.ColorScaleLevel;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.dip.Operator;
 
@@ -19,12 +21,9 @@ import com.frank.dip.Operator;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class Convolver<T extends Image> extends Operator<T, T>
+public class Convolver<T extends Image> extends Operator<T, T> implements
+		ColorScaleLevel
 {
-	/**
-	 * The color scale level.
-	 */
-	public static final int	COLOR_SCALE_LEVEL		= 256;
 	/**
 	 * Accuracy hint: Interrupt the out range values.
 	 * <p>
@@ -102,9 +101,11 @@ public class Convolver<T extends Image> extends Operator<T, T>
 
 	/**
 	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	@Override
-	public T operate(T source)
+	public T operate(T source) throws IllegalImageTypeException
 	{
 		if (source instanceof BinaryImage)
 			return (T) source.clone();
@@ -130,9 +131,7 @@ public class Convolver<T extends Image> extends Operator<T, T>
 					return (T) convolveColorWithNormalize((ColorImage) source);
 			}
 		}
-		throw new IllegalArgumentException(String.format(
-				"Current convolver %s cannot support image type: %s",
-				getClass().toString(), source.getClass().toString()));
+		throw new IllegalImageTypeException(getClass(), source.getClass());
 	}
 
 	/**
@@ -245,8 +244,7 @@ public class Convolver<T extends Image> extends Operator<T, T>
 		float lenGray = maxGray - minGray;
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				res.setPixel(x, y,
-						Math.round((gray[y][x] - minGray) / lenGray * 255));
+				res.setPixel(x, y, (gray[y][x] - minGray) / lenGray * 255);
 		return res;
 	}
 
@@ -311,7 +309,7 @@ public class Convolver<T extends Image> extends Operator<T, T>
 					if (pixel < 0)
 						res.setRed(x, y, 0);
 					else if (pixel < COLOR_SCALE_LEVEL)
-						res.setRed(x, y, Math.round(pixel));
+						res.setRed(x, y, pixel);
 					else
 						res.setRed(x, y, COLOR_SCALE_LEVEL - 1);
 					// green channel
@@ -319,7 +317,7 @@ public class Convolver<T extends Image> extends Operator<T, T>
 					if (pixel < 0)
 						res.setGreen(x, y, 0);
 					else if (pixel < COLOR_SCALE_LEVEL)
-						res.setGreen(x, y, Math.round(pixel));
+						res.setGreen(x, y, pixel);
 					else
 						res.setGreen(x, y, COLOR_SCALE_LEVEL - 1);
 					// blue channel

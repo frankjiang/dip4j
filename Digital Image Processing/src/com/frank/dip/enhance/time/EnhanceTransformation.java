@@ -137,7 +137,6 @@ public abstract class EnhanceTransformation<T extends Image> extends
 	@Override
 	public T operate(T source)
 	{
-		
 		int height = source.height();
 		int width = source.width();
 		if (!(source instanceof BinaryImage) && useHighAccuracyScheme)

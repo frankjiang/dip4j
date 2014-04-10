@@ -1,6 +1,8 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
- * HomomorphicEnhanceFilterFunction.java is PROPRIETARY/CONFIDENTIAL built in 2013.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
+ * HomomorphicEnhanceFilterFunction.java is PROPRIETARY/CONFIDENTIAL built in
+ * 2013.
  * Use is subject to license terms.
  */
 package com.frank.dip.math;

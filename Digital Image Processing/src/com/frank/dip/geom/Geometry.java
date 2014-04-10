@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * Geometry.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
@@ -12,6 +13,7 @@ import java.awt.image.AffineTransformOp;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 
 /**
@@ -177,12 +179,12 @@ public abstract class Geometry<T extends Image>
 	{
 		try
 		{
-			//			 m00 = sx;
-			//		        m10 = 0.0;
-			//		        m01 = 0.0;
-			//		        m11 = sy;
-			//		        m02 = 0.0;
-			//		        m12 = 0.0;
+			// m00 = sx;
+			// m10 = 0.0;
+			// m01 = 0.0;
+			// m11 = sy;
+			// m02 = 0.0;
+			// m12 = 0.0;
 			return transform(image, new AffineTransform(sx, 0, 0, sy, 0, 0));
 		}
 		catch (NoninvertibleTransformException e)
@@ -354,8 +356,11 @@ public abstract class Geometry<T extends Image>
 	 * @param fillScheme
 	 *            the edge filling scheme
 	 * @return the geometry operator
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static Geometry getGeometry(Image image, int type, int fillScheme)
+			throws IllegalImageTypeException
 	{
 		if (image instanceof BinaryImage)
 			return new GeometryBinary(type, fillScheme);
@@ -363,9 +368,7 @@ public abstract class Geometry<T extends Image>
 			return new GeometryGray(type, fillScheme);
 		if (image instanceof ColorImage)
 			return new GeometryColor(type, fillScheme);
-		throw new IllegalArgumentException(String.format(
-				"Current geometry operator cannot support image type:", image
-						.getClass().toString()));
+		throw new IllegalImageTypeException(Geometry.class, image.getClass());
 	}
 
 	/**
@@ -378,9 +381,11 @@ public abstract class Geometry<T extends Image>
 	 * @param fillScheme
 	 *            the edge filling scheme
 	 * @return the geometry operator
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static Geometry getGeometry(Class<? extends Image> c, int type,
-			int fillScheme)
+			int fillScheme) throws IllegalImageTypeException
 	{
 		if (c == BinaryImage.class)
 			return new GeometryBinary(type, fillScheme);
@@ -388,8 +393,6 @@ public abstract class Geometry<T extends Image>
 			return new GeometryGray(type, fillScheme);
 		if (c == ColorImage.class)
 			return new GeometryColor(type, fillScheme);
-		throw new IllegalArgumentException(String.format(
-				"Current geometry operator cannot support image type:",
-				c.toString()));
+		throw new IllegalImageTypeException(Geometry.class, c);
 	}
 }

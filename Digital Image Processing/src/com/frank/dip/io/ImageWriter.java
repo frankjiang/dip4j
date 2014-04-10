@@ -41,6 +41,7 @@ public abstract class ImageWriter
 	{
 		write(new MemoryCacheImageOutputStream(out), image);
 	}
+
 	/**
 	 * Write the specified image to the specified image output stream.
 	 * 
@@ -53,10 +54,11 @@ public abstract class ImageWriter
 	 */
 	public void write(File file, Image image) throws IOException
 	{
-		if(file.exists())
+		if (file.exists())
 			file.createNewFile();
 		write(new FileImageOutputStream(file), image);
 	}
+
 	/**
 	 * Write the specified image to the specified image output stream.
 	 * 

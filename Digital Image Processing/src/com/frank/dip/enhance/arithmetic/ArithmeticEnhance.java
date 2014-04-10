@@ -8,6 +8,7 @@ package com.frank.dip.enhance.arithmetic;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 
 /**
@@ -39,8 +40,11 @@ public class ArithmeticEnhance
 	 * @param right
 	 *            the right image to process
 	 * @return the new image after arithmetic performance
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public <T extends Image> T operate(T left, T right)
+			throws IllegalImageTypeException
 	{
 		int width = left.width();
 		int height = right.height();
@@ -99,9 +103,6 @@ public class ArithmeticEnhance
 									right.getPixel(x, y)));
 			return (T) bi;
 		}
-		throw new IllegalArgumentException(
-				String.format(
-						"Current arithmetic transformation cannot support image type: %s",
-						left.getClass().toString()));
+		throw new IllegalImageTypeException(getClass(), left.getClass());
 	}
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * MenuEnhance.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
@@ -7,6 +8,8 @@ package com.frank.dip.demo.comp;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.swing.JMenu;
@@ -15,10 +18,14 @@ import javax.swing.JMenuItem;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
 import com.frank.dip.Image;
+import com.frank.dip.ImageUtils;
 import com.frank.dip.analyze.FunctionDislpayDialog;
 import com.frank.dip.demo.DIPFrame;
+import com.frank.dip.demo.ImageDisplayDialog;
 import com.frank.dip.enhance.GrayScaleAverage;
 import com.frank.dip.enhance.GrayScaleCoefficient;
+import com.frank.dip.enhance.arithmetic.Arithmetic;
+import com.frank.dip.enhance.arithmetic.ArithmeticEnhance;
 import com.frank.dip.enhance.color.FakeColorTransform;
 import com.frank.dip.enhance.time.HistogramNormalization;
 import com.frank.dip.enhance.time.InversionTransformation;
@@ -428,6 +435,9 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnHistogramStretch.add(mntmHistogramStretchQuadratic);
+//		JMenu mnArithmetic = new JMenu("Arithmetic");
+//		loadArithmeticEnhaceItem(mnArithmetic, new Plus(), "Add");
+//		mnEnhance.add(mnArithmetic);
 		JMenuItem mntmFakeColor = new JMenuItem("Fake Color");
 		mntmFakeColor.addActionListener(new ActionListener()
 		{
@@ -489,5 +499,83 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnEnhance.add(mntmFakeColor);
+	}
+
+	/**
+	 * Load arithmetic enhance menu item to the specified menu.
+	 * @param menu the specified menu
+	 * @param arithmetic the arithmetic operator
+	 * @param itemName the item name
+	 */
+	protected void loadArithmeticEnhaceItem(JMenu menu,
+			final Arithmetic arithmetic, String itemName)
+	{
+		JMenuItem item = new JMenuItem(itemName);
+		item.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				dip.new Performance("Enhance", "Fake Color Transform")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						// select left image
+						File fileLeft = SwingUtils.selectLoadFile(dip,
+								"Select Left Image");
+						if (fileLeft == null)
+							return null;
+						Image left = null;
+						try
+						{
+							left = ImageUtils.createImage(fileLeft);
+						}
+						catch (IOException e)
+						{
+							e.printStackTrace();
+							SwingUtils.errorMessage(dip,
+									e.getLocalizedMessage());
+						}
+						ImageDisplayDialog iddLeft = new ImageDisplayDialog(
+								dip, "Left: " + fileLeft.getName(), false, left);
+						iddLeft.pack();
+						iddLeft.setVisible(true);
+						// select right image
+						File fileRight = SwingUtils.selectLoadFile(dip,
+								"Select Right Image");
+						if (fileRight == null)
+						{
+							iddLeft.dispose();
+							return null;
+						}
+						Image right = null;
+						try
+						{
+							right = ImageUtils.createImage(fileRight);
+						}
+						catch (IOException e)
+						{
+							e.printStackTrace();
+							SwingUtils.errorMessage(dip,
+									e.getLocalizedMessage());
+						}
+						ImageDisplayDialog iddRight = new ImageDisplayDialog(
+								dip, "Right: " + fileLeft.getName(), false,
+								left);
+						iddRight.pack();
+						iddRight.setVisible(true);
+						// perform arithmetic enhance
+						ArithmeticEnhance enhance = new ArithmeticEnhance(
+								arithmetic);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = enhance.operate(left, right);
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		menu.add(item);
 	}
 }

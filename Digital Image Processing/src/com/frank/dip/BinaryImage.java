@@ -20,7 +20,7 @@ import java.awt.Color;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class BinaryImage extends Image
+public class BinaryImage extends Image implements ColorScaleLevel
 {
 	/**
 	 * serialVersionUID.
@@ -122,7 +122,7 @@ public class BinaryImage extends Image
 				r = (p >> 16) & 0xff;
 				g = (p >> 8) & 0xff;
 				b = p & 0xff;
-				data[y][x] = (0.3f * r + 0.59f * g + 0.11f * b) > 127;
+				data[y][x] = (0.3f * r + 0.59f * g + 0.11f * b) >= COLOR_SCALE_LEVEL_HALF;
 			}
 	}
 
@@ -213,7 +213,7 @@ public class BinaryImage extends Image
 				r = (p >> 16) & 0xff;
 				g = (p >> 8) & 0xff;
 				b = p & 0xff;
-				data[y][x] = (0.3f * r + 0.59f * g + 0.11f * b) > 127;
+				data[y][x] = (0.3f * r + 0.59f * g + 0.11f * b) >= COLOR_SCALE_LEVEL_HALF;
 			}
 	}
 
@@ -298,7 +298,7 @@ public class BinaryImage extends Image
 				r = (p >> 16) & 0xff;
 				g = (p >> 8) & 0xff;
 				b = p & 0xff;
-				data[y][x] = (0.3f * r + 0.59f * g + 0.11f * b) > 127;
+				data[y][x] = (0.3f * r + 0.59f * g + 0.11f * b) >= COLOR_SCALE_LEVEL_HALF;
 			}
 	}
 
@@ -361,5 +361,15 @@ public class BinaryImage extends Image
 			for (int x = 0; x < width; x++)
 				image.data[y][x] = data[y0 + y][x0 + x];
 		return image;
+	}
+
+	/**
+	 * @see com.frank.dip.Image#setPixel(int, int, double)
+	 */
+	@Override
+	public void setPixel(int x, int y, double value)
+	{
+		checkBounds(x, y);
+		data[y][x] = value >= COLOR_SCALE_LEVEL_HALF;
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Properties;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 
 /**
@@ -135,11 +136,11 @@ public abstract class InversionTransformation<T extends Image> extends
 	 * @param source
 	 *            the source image
 	 * @return the inverse image
-	 * @throws IllegalArgumentException
+	 * @throws IllegalImageTypeException
 	 *             if the image type not supported
 	 */
 	public static <T extends Image> T inverse(T source)
-			throws IllegalArgumentException
+			throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return (T) (new Gray().operate((GrayImage) source));
@@ -147,9 +148,8 @@ public abstract class InversionTransformation<T extends Image> extends
 			return (T) (new Binary().operate((BinaryImage) source));
 		if (source instanceof ColorImage)
 			return (T) (new Color().operate((ColorImage) source));
-		throw new IllegalArgumentException(String.format(
-				"Current inversion cannot support image type: %s", source
-						.getClass().toString()));
+		throw new IllegalImageTypeException(InversionTransformation.class,
+				source.getClass());
 	}
 
 	/**
@@ -158,9 +158,11 @@ public abstract class InversionTransformation<T extends Image> extends
 	 * @param type
 	 *            the type of source image
 	 * @return the inversion transformation
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> InversionTransformation<T> getInverseTransformation(
-			Class<T> type)
+			Class<T> type) throws IllegalImageTypeException
 	{
 		if (type == GrayImage.class)
 			return (InversionTransformation<T>) new Gray();
@@ -168,9 +170,7 @@ public abstract class InversionTransformation<T extends Image> extends
 			return (InversionTransformation<T>) new Binary();
 		if (type == ColorImage.class)
 			return (InversionTransformation<T>) new Color();
-		throw new IllegalArgumentException(String.format(
-				"Current inversion cannot support image type: %s",
-				type.toString()));
+		throw new IllegalImageTypeException(InversionTransformation.class, type);
 	}
 
 	/**

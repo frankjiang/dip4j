@@ -225,10 +225,10 @@ public class GrayImage extends Image implements ColorScaleLevel
 		checkBounds(x, y);
 		if (value < 0)
 			data[y][x] = 0;
-		else if (value < 256)
+		else if (value < COLOR_SCALE_LEVEL)
 			data[y][x] = (byte) value;
 		else
-			data[y][x] = (byte) 255;
+			data[y][x] = (byte) (COLOR_SCALE_LEVEL - 1);
 	}
 
 	/**
@@ -318,5 +318,15 @@ public class GrayImage extends Image implements ColorScaleLevel
 			for (int x = 0; x < width; x++)
 				image.data[y][x] = data[y0 + y][x0 + x];
 		return image;
+	}
+
+	/**
+	 * @see com.frank.dip.Image#setPixel(int, int, double)
+	 */
+	@Override
+	public void setPixel(int x, int y, double value)
+	{
+		checkBounds(x, y);
+		data[x][y] = (byte) Math.round(value);
 	}
 }

@@ -6,7 +6,6 @@
  */
 package com.frank.dip;
 
-
 /**
  * The abstract image of digital image.
  * <p>
@@ -67,6 +66,18 @@ public abstract class Image extends AbstractImage implements Cloneable
 	 *            the value to set
 	 */
 	public abstract void setPixel(int x, int y, int value);
+	
+	/**
+	 * Set the specified value to specified pixel.
+	 * 
+	 * @param x
+	 *            X-coordinate of the position
+	 * @param y
+	 *            Y-coordinate of the position
+	 * @param value
+	 *            the high precision value to set
+	 */
+	public abstract void setPixel(int x, int y, double value);
 
 	/**
 	 * Returns the pixels array of the current image.

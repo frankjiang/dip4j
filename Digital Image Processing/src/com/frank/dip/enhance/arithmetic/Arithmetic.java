@@ -17,7 +17,6 @@ import com.frank.dip.ColorScaleLevel;
  */
 public interface Arithmetic extends ColorScaleLevel
 {
-
 	/**
 	 * Returns the result of the calculation {@code left} &oplus; {@code right}.
 	 * 

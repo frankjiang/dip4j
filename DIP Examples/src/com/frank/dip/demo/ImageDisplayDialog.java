@@ -95,7 +95,6 @@ public class ImageDisplayDialog extends JDialog implements Observer,
 				showAlphaInfo, hidIfExit);
 		panel.addObserver(this);
 		String pname = panel.getName();
-		System.out.println(pname);
 		setTitle(pname);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		getContentPane().add(panel, BorderLayout.CENTER);

@@ -16,7 +16,6 @@ import com.frank.dip.ColorScaleLevel;
  */
 public interface Kernel extends Cloneable, ColorScaleLevel
 {
-
 	/**
 	 * Perform the specified convolve to the pixels.
 	 * 

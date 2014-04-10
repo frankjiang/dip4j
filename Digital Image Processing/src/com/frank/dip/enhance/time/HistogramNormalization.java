@@ -9,6 +9,7 @@ import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.ColorScaleLevel;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.dip.Operator;
 import com.frank.dip.analyze.Histogram;
@@ -194,10 +195,8 @@ public abstract class HistogramNormalization<T extends Image> extends
 			return (T) new Color(function).operate((ColorImage) source);
 		if (source instanceof BinaryImage)
 			return (T) new Binary(function).operate((BinaryImage) source);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current histogram normalization cannot support image type: %s",
-						source.getClass().toString()));
+		throw new IllegalImageTypeException("Historgam normalization",
+				source.getClass());
 	}
 
 	/**
@@ -219,10 +218,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 			return (HistogramNormalization<T>) new Color(function);
 		if (type == BinaryImage.class)
 			return (HistogramNormalization<T>) new Binary(function);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current histogram normalization cannot support image type: %s",
-						type.toString()));
+		throw new IllegalImageTypeException("Histogram normalization", type);
 	}
 
 	/**

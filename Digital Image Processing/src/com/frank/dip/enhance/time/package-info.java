@@ -7,7 +7,6 @@
 /**
  * The image enhance library.
  * <p>
- * 
  * </p>
  * 
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>

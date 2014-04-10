@@ -378,6 +378,70 @@ public class ColorImage extends Image implements ColorScaleLevel
 	}
 
 	/**
+	 * Returns the pixel value at specified position in alpha channel.
+	 * 
+	 * @param x
+	 *            X-coordinate of the position
+	 * @param y
+	 *            Y-coordinate of the position
+	 * @param value
+	 *            the high precision alpha channel pixel value to set
+	 */
+	public void setAlpha(int x, int y, double value)
+	{
+		checkBounds(x, y);
+		alpha[y][x] = (byte) Math.round(value);
+	}
+
+	/**
+	 * Returns the pixel value at specified position in red channel.
+	 * 
+	 * @param x
+	 *            X-coordinate of the position
+	 * @param y
+	 *            Y-coordinate of the position
+	 * @param value
+	 *            the high precision red channel pixel value to set
+	 */
+	public void setRed(int x, int y, double value)
+	{
+		checkBounds(x, y);
+		red[y][x] = (byte) Math.round(value);
+	}
+
+	/**
+	 * Returns the pixel value at specified position in green channel.
+	 * 
+	 * @param x
+	 *            X-coordinate of the position
+	 * @param y
+	 *            Y-coordinate of the position
+	 * @param value
+	 *            the high precision green channel pixel value to set
+	 */
+	public void setGreen(int x, int y, double value)
+	{
+		checkBounds(x, y);
+		green[y][x] = (byte) Math.round(value);
+	}
+
+	/**
+	 * Returns the pixel value at specified position in blue channel.
+	 * 
+	 * @param x
+	 *            X-coordinate of the position
+	 * @param y
+	 *            Y-coordinate of the position
+	 * @param value
+	 *            the high precision blue channel pixel value to set
+	 */
+	public void setBlue(int x, int y, double value)
+	{
+		checkBounds(x, y);
+		blue[y][x] = (byte) Math.round(value);
+	}
+
+	/**
 	 * @see com.frank.dip.Image#getRGBArray()
 	 */
 	@Override
@@ -651,5 +715,16 @@ public class ColorImage extends Image implements ColorScaleLevel
 				image.blue[y][x] = blue[y0 + y][x0 + x];
 			}
 		return image;
+	}
+
+	/**
+	 * @deprecated In color image, no combined float ARGB pixel value, therefore
+	 *             this method
+	 *             has no effect.
+	 * @see com.frank.dip.Image#setPixel(int, int, double)
+	 */
+	@Override
+	public void setPixel(int x, int y, double value)
+	{
 	}
 }

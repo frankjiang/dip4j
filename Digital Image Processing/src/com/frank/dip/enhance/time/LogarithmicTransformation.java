@@ -10,6 +10,7 @@ import java.util.Properties;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 
 /**
@@ -533,8 +534,8 @@ public abstract class LogarithmicTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transformed image
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> T logarithm(T source, double c, double b)
 			throws IllegalArgumentException
@@ -561,11 +562,11 @@ public abstract class LogarithmicTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transformation
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> LogarithmicTransformation<T> getLogarithmTransformation(
-			Class<T> type, double c, double b) throws IllegalArgumentException
+			Class<T> type, double c, double b) throws IllegalImageTypeException
 	{
 		if (type == GrayImage.class)
 			return (LogarithmicTransformation<T>) new Gray(c, b);
@@ -573,10 +574,8 @@ public abstract class LogarithmicTransformation<T extends Image> extends
 			return (LogarithmicTransformation<T>) new Binary(c, b);
 		if (type == ColorImage.class)
 			return (LogarithmicTransformation<T>) new Color(c, b);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current logarithmic transformation cannot support image type: %s",
-						type.toString()));
+		throw new IllegalImageTypeException(LogarithmicTransformation.class,
+				type);
 	}
 
 	/**
@@ -590,11 +589,11 @@ public abstract class LogarithmicTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transformation
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> LogarithmicTransformation<T> getInverseLogarithmTransformation(
-			Class<T> type, double c, double b) throws IllegalArgumentException
+			Class<T> type, double c, double b) throws IllegalImageTypeException
 	{
 		if (type == GrayImage.class)
 			return (LogarithmicTransformation<T>) new InverseGray(c, b);
@@ -602,10 +601,8 @@ public abstract class LogarithmicTransformation<T extends Image> extends
 			return (LogarithmicTransformation<T>) new Binary(c, b);
 		if (type == ColorImage.class)
 			return (LogarithmicTransformation<T>) new InverseColor(c, b);
-		throw new IllegalArgumentException(
-				String.format(
-						"Current logarithmic transformation cannot support image type: %s",
-						type.toString()));
+		throw new IllegalImageTypeException(LogarithmicTransformation.class,
+				type);
 	}
 
 	/**
@@ -618,11 +615,11 @@ public abstract class LogarithmicTransformation<T extends Image> extends
 	 * @param b
 	 *            the constant value {@code b}
 	 * @return the transformed image
-	 * @throws IllegalArgumentException
-	 *             if the image type not supported
+	 * @throws IllegalImageTypeException
+	 *             if the image type is not supported
 	 */
 	public static <T extends Image> T inverseLogarithm(T source, double c,
-			double b) throws IllegalArgumentException
+			double b) throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return (T) (new InverseGray(c, b).operate((GrayImage) source));
@@ -630,10 +627,8 @@ public abstract class LogarithmicTransformation<T extends Image> extends
 			return (T) (new Binary(c, b).operate((BinaryImage) source));
 		if (source instanceof ColorImage)
 			return (T) (new InverseColor(c, b).operate((ColorImage) source));
-		throw new IllegalArgumentException(
-				String.format(
-						"Current logarithmic transformation cannot support image type: %s",
-						source.getClass().toString()));
+		throw new IllegalImageTypeException(LogarithmicTransformation.class,
+				source.getClass());
 	}
 
 	/**

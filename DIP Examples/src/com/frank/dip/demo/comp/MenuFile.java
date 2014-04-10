@@ -5,9 +5,9 @@
  */
 package com.frank.dip.demo.comp;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
@@ -50,11 +50,12 @@ public class MenuFile extends MenuLoader
 		JMenu mnFile = new JMenu("File(F)");
 		mnFile.setMnemonic('F');
 		dip.getBar().add(mnFile);
+		int controlKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		JMenuItem mntmOpen = new JMenuItem("Open");
 		mntmOpen.setIcon(new ImageIcon(DIPFrame.class
 				.getResource("/com/frank/dip/res/file - open.png")));////$NON-NLS-1$
 		mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				InputEvent.CTRL_MASK));
+				controlKey));
 		mntmOpen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -74,7 +75,7 @@ public class MenuFile extends MenuLoader
 			}
 		});
 		mntmSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				InputEvent.CTRL_MASK));
+				controlKey));
 		mnFile.add(mntmSave);
 		JMenuItem mntmOpenInNew = new JMenuItem("Open in New");
 		mntmOpenInNew.addActionListener(new ActionListener()

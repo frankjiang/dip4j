@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * MorphGray.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */

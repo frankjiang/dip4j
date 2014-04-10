@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
+ * reserved.
  * GuassNoiseGenerator.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
@@ -10,6 +11,7 @@ import java.util.Random;
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.dip.Operator;
 
@@ -55,7 +57,7 @@ public class GuassNoiseGenerator extends Operator<Image, Image>
 	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
 	 */
 	@Override
-	public Image operate(Image source)
+	public Image operate(Image source) throws IllegalImageTypeException
 	{
 		if (source instanceof GrayImage)
 			return operateGray((GrayImage) source);
@@ -63,8 +65,7 @@ public class GuassNoiseGenerator extends Operator<Image, Image>
 			return operateColor((ColorImage) source);
 		if (source instanceof GrayImage)
 			return operateBinary((BinaryImage) source);
-		throw new IllegalArgumentException(String.format(
-				"Unsupported image type: %s", source.getClass()));
+		throw new IllegalImageTypeException(getClass(), source.getClass());
 	}
 
 	private GrayImage operateGray(GrayImage source)
