@@ -26,15 +26,23 @@ public class Sample
 	 * The target value.
 	 */
 	protected Double				target;
+	/**
+	 * The feature size.
+	 */
+	protected int					size;
 
 	/**
 	 * Construct an default instance of <tt>Sample</tt>.
 	 * <p>
 	 * No specified target or feature value.
 	 * </p>
+	 * 
+	 * @param size
+	 *            the feature size
 	 */
-	public Sample()
+	public Sample(int size)
 	{
+		this.size = size;
 		feature = new SparseVector.Double();
 		target = null;
 	}
@@ -42,13 +50,16 @@ public class Sample
 	/**
 	 * Construct an instance of <tt>Sample</tt>.
 	 * 
+	 * @param size
+	 *            the feature size
 	 * @param target
 	 *            the target value
 	 * @param features
 	 *            the feature vector
 	 */
-	public Sample(Double target, Double... features)
+	public Sample(int size, Double target, Double... features)
 	{
+		this.size = size;
 		feature = new SparseVector.Double();
 		this.target = target;
 		int index = 0;
@@ -110,5 +121,26 @@ public class Sample
 	public Double getTarget()
 	{
 		return target;
+	}
+
+	/**
+	 * Returns the feature size.
+	 * 
+	 * @return the feature size
+	 */
+	public int size()
+	{
+		return size;
+	}
+
+	/**
+	 * Set the feature size.
+	 * 
+	 * @param size
+	 *            the value of feature size
+	 */
+	public void setSize(int size)
+	{
+		this.size = size;
 	}
 }

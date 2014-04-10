@@ -24,7 +24,7 @@ import com.frank.dip.threshold.Thresholding;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
+public class ExtractGridFeature extends FeatureExtractor<Image>
 {
 	/**
 	 * The thresholding method of transfer a other color type image to binary
@@ -82,8 +82,9 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	 *      java.lang.Double)
 	 */
 	@Override
-	public Sample extract(T image, Double target)
+	public Sample extract(Image image, Double target)
 	{
+		// prepare binary image
 		int width = image.width();
 		int height = image.height();
 		if (width < columns || height < rows)
@@ -98,38 +99,79 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 			bi = (thresholding.operate((GrayImage) image)).getBinaryMatrix();
 		else
 			bi = (thresholding.operate(new GrayImage(image))).getBinaryMatrix();
-		Sample s = new Sample();
+		Sample s = new Sample(rows * columns);
 		s.setTarget(target);
+		// build integral image
 		double summary = 0.0;
-		int counter = 0;
-		double[][] integral = new double[width + 1][height + 1];
+		int counter;
+		double[][] integral = new double[height + 1][width + 1];
 		for (int y = 1; y <= height; y++, summary += counter)
 		{
 			counter = 0;
 			for (int x = 1; x <= width; x++)
 			{
-				if (bi[y][x])
+				if (bi[y - 1][x - 1])
 					counter++;
 				integral[y][x] = integral[y - 1][x] + counter;
 			}
 		}
-		for (int y = 1; y <= height; y++)
-			for (int x = 1; x <= width; x++)
-				integral[y][x] /= summary;
-		// OUTPUT
-		for (int y = 1; y <= height; y++)
-		{
-			for (int x = 1; x <= width; x++)
-				System.out.printf("%f\t", integral[y][x]);
-			System.out.println();
-		}
-		return null;
+		// do normalization
+		if (isScaled)
+			for (int y = 1; y <= height; y++)
+				for (int x = 1; x <= width; x++)
+					integral[y][x] /= summary;
+		// creating grids
+		double stepX = width / (double) rows;
+		double stepY = height / (double) columns;
+		int x0, y0, x0t, y0t, x1, y1, x1t, y1t; // anchor points of center
+		double x, y, xt, yt, dx, dy, dxt, dyt;// anchor points of floats
+		double value, all, top, bottom, left, right, // side areas
+		left_top, left_bottom, right_top, right_bottom;
+		int index = 0;// index of the grid
+		for (int row = 0; row < rows; row++)
+			for (int column = 0; column < columns; column++)
+			{
+				x = column * stepX;
+				y = row * stepY;
+				xt = x + stepX;
+				yt = y + stepY;
+				// integer anchors
+				x0 = floor(x, ACCURACY);
+				y0 = floor(y, ACCURACY);
+				x1 = x0 + 1;
+				y1 = y0 + 1;
+				x0t = ceil(xt, ACCURACY);
+				y0t = ceil(yt, ACCURACY);
+				x1t = x0t - 1;
+				y1t = y0t - 1;
+				// divisors
+				dx = x - x0;
+				dy = y - y0;
+				dxt = x0t - xt;
+				dyt = y0t - yt;
+				// calculate areas
+				// @formatter:off
+				all	   = 		integral[y0t][x0t] - integral[y0t][x0]  - integral[y0] [x0t] + integral[y0] [x0];
+				left   = dxt * (integral[y0t][x1]  - integral[y0t][x0]  - integral[y0] [x1]  + integral[y0] [x0]);
+				right  = dxt * (integral[y0t][x0t] - integral[y0t][x1t] - integral[y0] [x0t] + integral[y0] [x1t]);
+				top    = dy  * (integral[y1] [x0t] - integral[y1] [x0]  - integral[y0] [x0t] + integral[y0] [x0]);
+				bottom = dyt * (integral[y0t][x0t] - integral[y0t][x0]  - integral[y1t][x0t] + integral[y1t][x0]);
+				left_top 	 = dx  * dy  * (integral[y1] [x1]  - integral[y1] [x0] -  integral[y0] [x1]  + integral[y0] [x0]);
+				left_bottom  = dx  * dyt * (integral[y0t][x1]  - integral[y0t][x0] -  integral[y1t][x1]  + integral[y1t][x0]);
+				right_top 	 = dxt * dy  * (integral[y1] [x0t] - integral[y1] [x1t] - integral[y0] [x0t] + integral[y0] [x1t]);
+				right_bottom = dxt * dyt * (integral[y0t][x0t] - integral[y0t][x1t] - integral[y1t][x0t] + integral[y1t][x1t]);
+				// @formatter:on
+				value = all - left - right - top - bottom + left_top
+						+ left_bottom + right_top + right_bottom;
+				s.insert(index++, value);
+			}
+		return s;
 	}
 
 	/**
-	 * Returns thresholding.
+	 * Returns thresholding method.
 	 * 
-	 * @return the thresholding
+	 * @return the thresholding method
 	 */
 	public Thresholding getThresholding()
 	{
@@ -137,10 +179,10 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	}
 
 	/**
-	 * Set thresholding.
+	 * Set thresholding method.
 	 * 
 	 * @param thresholding
-	 *            the value of thresholding
+	 *            the value of thresholding method
 	 */
 	public void setThresholding(Thresholding thresholding)
 	{
@@ -148,7 +190,7 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	}
 
 	/**
-	 * Returns rows.
+	 * Returns rows of features.
 	 * 
 	 * @return the rows
 	 */
@@ -158,7 +200,7 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	}
 
 	/**
-	 * Set rows.
+	 * Set rows of features.
 	 * 
 	 * @param rows
 	 *            the value of rows
@@ -169,7 +211,7 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	}
 
 	/**
-	 * Returns columns.
+	 * Returns columns of features.
 	 * 
 	 * @return the columns
 	 */
@@ -179,7 +221,7 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	}
 
 	/**
-	 * Set columns.
+	 * Set columns of features.
 	 * 
 	 * @param columns
 	 *            the value of columns
@@ -190,9 +232,9 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	}
 
 	/**
-	 * Returns isScaled.
+	 * Returns if <code>true</code> do normalization to the result.
 	 * 
-	 * @return the isScaled
+	 * @return if <code>true</code> do normalization to the result.
 	 */
 	public boolean isScaled()
 	{
@@ -200,13 +242,86 @@ public class ExtractGridFeature<T extends Image> extends FeatureExtractor<T>
 	}
 
 	/**
-	 * Set isScaled.
+	 * Set if <code>true</code> do normalization to the result.
 	 * 
 	 * @param isScaled
-	 *            the value of isScaled
+	 *            if <code>true</code> do normalization to the result.
 	 */
 	public void setScaled(boolean isScaled)
 	{
 		this.isScaled = isScaled;
+	}
+
+	/**
+	 * Accuracy for avoiding adding up error.
+	 */
+	private static final double	ACCURACY	= 1e-4;
+
+	/**
+	 * Returns the largest (closest to positive infinity) {@code double} value
+	 * that is less than or equal to the
+	 * argument and is equal to a mathematical integer. Special cases:
+	 * <ul>
+	 * <li>If the argument value is already equal to a mathematical integer,
+	 * then the result is the same as the argument.</li>
+	 * <li>If the argument is NaN or an infinity or positive zero or negative
+	 * zero, then the result is the same as the argument.</li>
+	 * </ul>
+	 * <p>
+	 * This method is different from the {@linkplain Math#floor(double) native
+	 * floor method}, this method can avoid adding up error. If the value is has
+	 * the smaller distance between <code>d</code> and <code>(int) a</code> than
+	 * use (int) a to represent it.
+	 * </p>
+	 * 
+	 * @param a
+	 *            a value.
+	 * @param accuracy
+	 *            the accuracy for judging adding up error
+	 * @return the largest (closest to positive infinity)
+	 *         floating-point value that less than or equal to the argument
+	 *         and is equal to a mathematical integer.
+	 */
+	public static int floor(double a, double accuracy)
+	{
+		if (accuracy > a - (int) a)
+			return (int) a;
+		else
+			return (int) Math.floor(a);
+	}
+
+	/**
+	 * Returns the smallest (closest to negative infinity) {@code double} value
+	 * that is greater than or equal to the
+	 * argument and is equal to a mathematical integer. Special cases:
+	 * <ul>
+	 * <li>If the argument value is already equal to a mathematical integer,
+	 * then the result is the same as the argument.</li>
+	 * <li>If the argument is NaN or an infinity or positive zero or negative
+	 * zero, then the result is the same as the argument.</li>
+	 * <li>If the argument value is less than zero but greater than -1.0, then
+	 * the result is negative zero.</li>
+	 * </ul>
+	 * Note that the value of {@code Math.ceil(x)} is exactly the
+	 * value of {@code -Math.floor(-x)}.
+	 * <p>
+	 * This method is different from the {@linkplain Math#floor(double) native
+	 * floor method}, this method can avoid adding up error. If the value is has
+	 * the smaller distance between <code>d</code> and <code>(int) a</code> than
+	 * use (int) a to represent it.
+	 * </p>
+	 * 
+	 * @param a
+	 *            a value.
+	 * @return the smallest (closest to negative infinity)
+	 *         floating-point value that is greater than or equal to
+	 *         the argument and is equal to a mathematical integer.
+	 */
+	public static int ceil(double a, double accuracy)
+	{
+		if (accuracy > a - (int) a)
+			return (int) a;
+		else
+			return (int) Math.ceil(a);
 	}
 }

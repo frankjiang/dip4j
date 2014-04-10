@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="lib/com.frank.math.jar"/>
 	<classpathentry kind="lib" path="lib/com.frank.swing.jar"/>
 	<classpathentry kind="lib" path="lib/com.frank.sys.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/math4j"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -185,6 +185,21 @@ public class ImageIO
 	/**
 	 * Read the image file and return the image instance it represents.
 	 * 
+	 * @param filename
+	 *            the image filename
+	 * @return the image instance
+	 * @throws IOException
+	 *             if I/O error occurred
+	 */
+	public static Image read(String filename) throws IOException
+	{
+		return read(new FileImageInputStream(new File(filename)),
+				getSuffix(filename));
+	}
+
+	/**
+	 * Read the image file and return the image instance it represents.
+	 * 
 	 * @param file
 	 *            the image file
 	 * @return the image instance
