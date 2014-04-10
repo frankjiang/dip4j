@@ -81,10 +81,10 @@ public class MultiKernel implements Kernel
 	}
 
 	/**
-	 * @see com.frank.dip.enhance.convolver.Kernel#perform(int[])
+	 * @see com.frank.dip.enhance.convolver.Kernel#perform(float[])
 	 */
 	@Override
-	public float perform(int... pixels)
+	public float perform(float... pixels)
 	{
 		float max = Float.NEGATIVE_INFINITY;
 		float t;

@@ -152,7 +152,7 @@ public class Convolver<T extends Image> extends Operator<T, T> implements
 		boolean fh = h % 2 == 0;// the flag whether the height is even
 		int dw = w / 2;
 		int dh = h / 2;
-		int[] pixels = new int[w * h];
+		float[] pixels = new float[w * h];
 		float pixel;
 		GrayImage res = gi.recreate();
 		for (int y = 0; y < height; y++)
@@ -206,9 +206,9 @@ public class Convolver<T extends Image> extends Operator<T, T> implements
 		boolean fh = h % 2 == 0;// the flag whether the height is even
 		int dw = w / 2;
 		int dh = h / 2;
-		int[] pixels = new int[w * h];
+		float[] pixels = new float[w * h];
 		float pixel;
-		int[][] gray = new int[height][width];
+		float[][] gray = new float[height][width];
 		float minGray = Integer.MAX_VALUE;
 		float maxGray = Integer.MIN_VALUE;
 		for (int y = 0; y < height; y++)
@@ -267,9 +267,9 @@ public class Convolver<T extends Image> extends Operator<T, T> implements
 		int dw = w / 2;
 		int dh = h / 2;
 		// neighbor pixels
-		int[] reds = new int[w * h];
-		int[] greens = new int[w * h];
-		int[] blues = new int[w * h];
+		float[] reds = new float[w * h];
+		float[] greens = new float[w * h];
+		float[] blues = new float[w * h];
 		ColorImage res = ci.recreate();
 		// temporary pixels arrays
 		float pixel;
@@ -351,12 +351,12 @@ public class Convolver<T extends Image> extends Operator<T, T> implements
 		int dw = w / 2;
 		int dh = h / 2;
 		// neighbor pixels
-		int[] reds = new int[w * h];
-		int[] greens = new int[w * h];
-		int[] blues = new int[w * h];
+		float[] reds = new float[w * h];
+		float[] greens = new float[w * h];
+		float[] blues = new float[w * h];
 		// temporary pixels arrays
-		int[][] red = new int[height][width];
-		int[][] green = new int[height][width];
+		float[][] red = new float[height][width];
+		float[][] green = new float[height][width];
 		int[][] blue = new int[height][width];
 		// maximums and minimums
 		float minRed = Integer.MAX_VALUE;

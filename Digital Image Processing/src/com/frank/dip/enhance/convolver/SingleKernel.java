@@ -102,9 +102,9 @@ public class SingleKernel implements Kernel
 	}
 
 	/**
-	 * @see com.frank.dip.enhance.convolver.Kernel#perform(int[])
+	 * @see com.frank.dip.enhance.convolver.Kernel#perform(float[])
 	 */
-	public float perform(int... pixels)
+	public float perform(float... pixels)
 	{
 		float k = 0.0f;
 		for (int i = 0; i < pixels.length && i < kernel.length; i++)

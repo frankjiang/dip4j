@@ -145,9 +145,9 @@ public class GeometricMeanKernel extends SingleKernel
 	}
 
 	/**
-	 * @see com.frank.dip.enhance.convolver.SingleKernel#perform(int[])
+	 * @see com.frank.dip.enhance.convolver.SingleKernel#perform(float[])
 	 */
-	public float perform(int... pixels)
+	public float perform(float... pixels)
 	{
 		if (product <= 0)
 			return super.perform(pixels);

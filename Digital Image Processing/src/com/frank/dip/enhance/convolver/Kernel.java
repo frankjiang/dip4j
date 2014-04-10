@@ -23,7 +23,7 @@ public interface Kernel extends Cloneable, ColorScaleLevel
 	 *            the line first order pixels input
 	 * @return the pixel value after convolution
 	 */
-	public float perform(int... pixels);
+	public float perform(float... pixels);
 
 	/**
 	 * Returns the width of the kernel.

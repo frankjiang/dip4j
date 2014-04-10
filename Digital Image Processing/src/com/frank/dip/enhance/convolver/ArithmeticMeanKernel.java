@@ -147,9 +147,9 @@ public class ArithmeticMeanKernel extends SingleKernel
 	}
 
 	/**
-	 * @see com.frank.dip.enhance.convolver.SingleKernel#perform(int[])
+	 * @see com.frank.dip.enhance.convolver.SingleKernel#perform(float[])
 	 */
-	public float perform(int... pixels)
+	public float perform(float... pixels)
 	{
 		if (summary <= 0)
 			return super.perform(pixels);
