@@ -3,9 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Digital Image Processing"/>
-	<classpathentry kind="lib" path="lib/com.frank.math.jar"/>
-	<classpathentry kind="lib" path="lib/com.frank.swing.jar"/>
-	<classpathentry kind="lib" path="lib/com.frank.sys.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/math4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/math4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Swing-Utilities"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/System-Utilities"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
