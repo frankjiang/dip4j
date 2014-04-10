@@ -6,7 +6,7 @@
  * Use is subject to license terms.
  */
 /**
- * The geometry feature extractors.
+ * The statistic feature extractors.
  * <p>
  * </p>
  * 

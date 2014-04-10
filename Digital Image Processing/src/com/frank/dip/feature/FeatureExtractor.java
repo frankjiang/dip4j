@@ -7,8 +7,6 @@
  */
 package com.frank.dip.feature;
 
-import com.frank.dip.Image;
-
 /**
  * The feature extractor.
  * <p>
@@ -17,16 +15,43 @@ import com.frank.dip.Image;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public abstract class FeatureExtractor<T extends Image>
+public abstract class FeatureExtractor<T>
 {
 	/**
-	 * Extract features from specified image.
+	 * Extract features from specified data.
 	 * 
-	 * @param image
-	 *            the specified image
+	 * @param data
+	 *            the specified data
 	 * @param target
 	 *            the target value, <code>null</code> if not determined
 	 * @return the extracted features
 	 */
-	abstract public Sample extract(T image, Double target);
+	public Sample extract(T data, Double target)
+	{
+		Sample s = new Sample(size());
+		s.setTarget(target);
+		extract(s, data, 0);
+		return s;
+	}
+
+	/**
+	 * Extract features from specified data and append to the last of the
+	 * specified sample.
+	 * 
+	 * @param s
+	 *            the specified sample
+	 * @param data
+	 *            the specified data
+	 * @param beginIndex
+	 *            the begin index of the features to insert in
+	 * @return the end index of the inserted features
+	 */
+	abstract public int extract(Sample s, T data, int beginIndex);
+
+	/**
+	 * Returns the size of features.
+	 * 
+	 * @return the size of features
+	 */
+	abstract public int size();
 }
