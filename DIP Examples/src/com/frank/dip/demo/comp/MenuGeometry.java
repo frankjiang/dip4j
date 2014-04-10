@@ -5,8 +5,6 @@
  */
 package com.frank.dip.demo.comp;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.NoninvertibleTransformException;
@@ -15,17 +13,10 @@ import java.awt.geom.Point2D;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import com.frank.dip.ColorImage;
-import com.frank.dip.GrayImage;
 import com.frank.dip.Image;
-import com.frank.dip.demo.ChannelGrabber;
 import com.frank.dip.demo.DIPFrame;
-import com.frank.dip.demo.ImageDisplayDialog;
-import com.frank.dip.enhance.convolver.Convolver;
-import com.frank.dip.enhance.convolver.LoGKernel;
 import com.frank.dip.geom.AffineTransform;
 import com.frank.dip.geom.Geometry;
-import com.frank.dip.geom.GeometryColor;
 import com.frank.swing.SwingUtils;
 import com.frank.sys.TestUtils;
 import com.frank.sys.TestUtils.Timer;
@@ -267,108 +258,5 @@ public class MenuGeometry extends MenuLoader
 			}
 		});
 		mnGeometry.add(mntmSpatialTransform);
-		JMenu mnExperimentp = new JMenu("Experiment(P)");
-		mnExperimentp.setMnemonic('P');
-		dip.getBar().add(mnExperimentp);
-		JMenuItem mntm3ChannelsEdge = new JMenuItem("3 Channels Edge Detect");
-		mntm3ChannelsEdge.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				dip.new Performance("Test", "3 Channels Edge Detect")
-				{
-					@Override
-					protected Image perform(Image image)
-					{
-						ColorImage ci = null;
-						if (image instanceof ColorImage)
-							ci = (ColorImage) image;
-						else
-						{
-							SwingUtils.errorMessage(dip, "Not a color image!");
-							return null;
-						}
-						if (ci.width() > 256 && ci.height() > 256)
-							ci = new GeometryColor().scale(ci, 256);
-						GrayImage red = ChannelGrabber.grab(ci,
-								ChannelGrabber.RED);
-						GrayImage green = ChannelGrabber.grab(ci,
-								ChannelGrabber.GREEN);
-						GrayImage blue = ChannelGrabber.grab(ci,
-								ChannelGrabber.BLUE);
-						GrayImage gray = ChannelGrabber.grab(ci,
-								ChannelGrabber.GRAY);
-						Convolver<GrayImage> conv = new Convolver<GrayImage>(
-								new LoGKernel());
-						GrayImage red_c = conv.operate(red);
-						GrayImage green_c = conv.operate(green);
-						GrayImage blue_c = conv.operate(blue);
-						GrayImage gray_c = conv.operate(gray);
-						java.awt.Window window = dip;
-						boolean modal = false;
-						Dimension screen = Toolkit.getDefaultToolkit()
-								.getScreenSize();
-						int x = 0, y = 0, dx = screen.width / 4, dy = screen.height / 2;
-						// source image displaying
-						ImageDisplayDialog red_d = new ImageDisplayDialog(
-								window, "Red Channel", modal, red);
-						dip.addWindow(red_d);
-						red_d.setLocation(x, y);
-						x += dx;
-						ImageDisplayDialog green_d = new ImageDisplayDialog(
-								window, "Green Channel", modal, green);
-						dip.addWindow(green_d);
-						green_d.setLocation(x, y);
-						x += dx;
-						ImageDisplayDialog blue_d = new ImageDisplayDialog(
-								window, "Blue Channel", modal, blue);
-						dip.addWindow(blue_d);
-						blue_d.setLocation(x, y);
-						x += dx;
-						ImageDisplayDialog gray_d = new ImageDisplayDialog(
-								window, "Gray Image", modal, gray);
-						dip.addWindow(gray_d);
-						gray_d.setLocation(x, y);
-						x += dx;
-						// convolved image displaying
-						x = 0;
-						y += dy;
-						ImageDisplayDialog red_c_d = new ImageDisplayDialog(
-								window, "Convolve Red", modal, red_c);
-						dip.addWindow(red_c_d);
-						dip.addWindow(red_c_d);
-						red_c_d.setLocation(x, y);
-						x += dx;
-						ImageDisplayDialog green_c_d = new ImageDisplayDialog(
-								window, "Convolve Green", modal, green_c);
-						dip.addWindow(green_c_d);
-						green_c_d.setLocation(x, y);
-						x += dx;
-						ImageDisplayDialog blue_c_d = new ImageDisplayDialog(
-								window, "Convolve Blue", modal, blue_c);
-						dip.addWindow(blue_c_d);
-						blue_c_d.setLocation(x, y);
-						x += dx;
-						ImageDisplayDialog gray_c_d = new ImageDisplayDialog(
-								window, "Convolve Gray", modal, gray_c);
-						dip.addWindow(gray_c_d);
-						gray_c_d.setLocation(x, y);
-						x += dx;
-						// set visibilities
-						boolean b = true;
-						red_d.setVisible(b);
-						green_d.setVisible(b);
-						blue_d.setVisible(b);
-						gray_d.setVisible(b);
-						red_c_d.setVisible(b);
-						green_c_d.setVisible(b);
-						blue_c_d.setVisible(b);
-						gray_c_d.setVisible(b);
-						return null;
-					}
-				}.perform();
-			}
-		});
-		mnExperimentp.add(mntm3ChannelsEdge);
 	}
 }

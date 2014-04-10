@@ -311,8 +311,8 @@ public class GrayImage extends Image implements ColorScaleLevel
 			throws ArrayIndexOutOfBoundsException
 	{
 		checkBounds(x0, y0);
-		checkBounds(xt - 1, yt - 1);
-		int width = xt - x0, height = yt - y0;
+		checkBounds(xt, yt);
+		int width = xt - x0 + 1, height = yt - y0 + 1;
 		GrayImage image = new GrayImage(width, height);
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)

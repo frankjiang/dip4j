@@ -704,7 +704,7 @@ public class ColorImage extends Image implements ColorScaleLevel
 	{
 		checkBounds(x0, y0);
 		checkBounds(xt, yt);
-		int width = xt - x0, height = yt - y0;
+		int width = xt - x0 + 1, height = yt - y0 + 1;
 		ColorImage image = new ColorImage(width, height);
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
