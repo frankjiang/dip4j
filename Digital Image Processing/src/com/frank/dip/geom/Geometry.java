@@ -243,20 +243,23 @@ public abstract class Geometry<T extends Image>
 
 	/**
 	 * Scale the image with specified {@code size}. The size factor means the
-	 * minimum one in width and height will be scaled to the {@code size}, and
+	 * short/long one in width and height will be scaled to the {@code size},
+	 * and
 	 * the other one will be scaled relatively.
 	 * 
 	 * @param image
 	 *            the image to scale
 	 * @param size
 	 *            the size factor for scaled image
+	 * @param isShort
+	 *            if <code>true</code> transform use short edge as baseline
 	 * @return the scaled image
 	 */
-	public T scale(T image, int size)
+	public T scale(T image, int size, boolean isShort)
 	{
 		double w = image.width();
 		double h = image.height();
-		double rate = size / (w < h ? w : h);
+		double rate = size / (isShort ? (w < h ? w : h) : (w < h ? h : w));
 		try
 		{
 			return transform(image, new AffineTransform(rate, 0, 0, rate, 0, 0));

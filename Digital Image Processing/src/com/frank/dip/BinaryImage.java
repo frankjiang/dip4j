@@ -372,4 +372,13 @@ public class BinaryImage extends Image implements ColorScaleLevel
 		checkBounds(x, y);
 		data[y][x] = value >= COLOR_SCALE_LEVEL_HALF;
 	}
+
+	/**
+	 * @see com.frank.dip.Image#recreate(int, int)
+	 */
+	@Override
+	public Image recreate(int width, int height)
+	{
+		return new BinaryImage(width, height);
+	}
 }

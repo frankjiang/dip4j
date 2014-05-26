@@ -327,6 +327,39 @@ public class GrayImage extends Image implements ColorScaleLevel
 	public void setPixel(int x, int y, double value)
 	{
 		checkBounds(x, y);
-		data[x][y] = (byte) Math.round(value);
+		if (value >= COLOR_SCALE_LEVEL)
+			data[y][x] = (byte) 255;
+		else if (value <= 0)
+			data[y][x] = 0;
+		else
+			data[y][x] = (byte) Math.round(value);
+	}
+
+	/**
+	 * @see com.frank.dip.Image#recreate(int, int)
+	 */
+	@Override
+	public Image recreate(int width, int height)
+	{
+		return new GrayImage(width, height);
+	}
+
+	/**
+	 * Convert a any type image to gray scale image.
+	 * <p>
+	 * If the image input is a gray scale image, just return itself; otherwise,
+	 * make a gray scale copy of the specified image.
+	 * </p>
+	 * 
+	 * @param image
+	 *            the image to be converted
+	 * @return the converted image
+	 */
+	public static GrayImage convert(Image image)
+	{
+		if (image instanceof GrayImage)
+			return (GrayImage) image;
+		else
+			return new GrayImage(image);
 	}
 }

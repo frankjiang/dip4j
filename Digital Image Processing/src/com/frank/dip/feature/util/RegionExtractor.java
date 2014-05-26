@@ -9,10 +9,12 @@ package com.frank.dip.feature.util;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
+import com.frank.dip.IllegalImageContentException;
 import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
 import com.frank.dip.Operator;
@@ -38,6 +40,10 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 	 * if scale is not needed.
 	 */
 	protected Dimension	scaleSize;
+	/**
+	 * The size of the short edge.
+	 */
+	protected Integer	size;
 
 	/**
 	 * Construct an instance of <tt>RegionExtractor</tt>.
@@ -59,6 +65,7 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 	{
 		this.background = background;
 		this.scaleSize = scaleSize;
+		size = null;
 	}
 
 	/**
@@ -75,6 +82,22 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 	{
 		this.background = background;
 		scaleSize = new Dimension(width, height);
+		size = null;
+	}
+
+	/**
+	 * Construct an instance of <tt>RegionExtractor</tt>.
+	 * 
+	 * @param background
+	 *            the background color
+	 * @param size
+	 *            the size of the short edge
+	 */
+	public RegionExtractor(Color background, int size)
+	{
+		this.background = background;
+		scaleSize = null;
+		this.size = size;
 	}
 
 	/**
@@ -142,10 +165,53 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 	}
 
 	/**
+	 * @throws IllegalImageContentException
+	 *             if no bound found in the specified image
 	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
 	 */
 	@Override
-	public T operate(T source)
+	public T operate(T source) throws RuntimeException
+	{
+		Rectangle bound = findBound(source, background);
+		if (bound == null)
+			throw new IllegalImageContentException(
+					"No bound found in the specified image.");
+		// scale sub-image if needed
+		if (scaleSize == null)
+		{
+			if (size == null)
+				return (T) source.subImage(bound.x, bound.y, bound.x
+						+ bound.width, bound.y + bound.height);
+			else
+				return (T) Geometry.getGeometry(source, Geometry.TYPE_BILINEAR,
+						Geometry.FILL_WITH_BLANK).scale(
+						(T) source.subImage(bound.x, bound.y, bound.x
+								+ bound.width, bound.y + bound.height), size,
+						false);
+		}
+		else
+			return (T) Geometry.getGeometry(source, Geometry.TYPE_BILINEAR,
+					Geometry.FILL_WITH_BLANK).scale(
+					(T) source.subImage(bound.x, bound.y,
+							bound.x + bound.width, bound.y + bound.height),
+					scaleSize.width, scaleSize.height);
+	}
+
+	/**
+	 * Returns the outer bound of the specified image.
+	 * <p>
+	 * The outer bound of a image is the rectangle which matches the top, left,
+	 * right and bottom edges of the foreground in the image.
+	 * </p>
+	 * 
+	 * @param source
+	 *            the specified image to find
+	 * @param background
+	 *            the background color
+	 * @return the outer bound or <code>null</code> if there is not foreground
+	 *         found
+	 */
+	public static Rectangle findBound(Image source, Color background)
 	{
 		// generate color
 		int rgb = 0;
@@ -156,9 +222,10 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 					.getBlue()) / 3;
 		else if (source instanceof BinaryImage)
 			rgb = ((background.getRed() + background.getGreen() + background
-					.getBlue()) / 3 > 127) ? 0 : 255;
+					.getBlue()) / 3 < 128) ? 0 : 255;
 		else
-			throw new IllegalImageTypeException(getClass(), source.getClass());
+			throw new IllegalImageTypeException(RegionExtractor.class,
+					source.getClass());
 		// prepare parameters
 		int width = source.width(), height = source.height();
 		int top = 0, bottom = height - 1, left = 0, right = width - 1;
@@ -201,14 +268,7 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 					flag = false;
 				}
 		if (left > right || top > bottom)
-			return source;
-		// scale sub-image if needed
-		if (scaleSize == null)
-			return (T) source.subImage(left, top, right, bottom);
-		else
-			return (T) Geometry.getGeometry(source, Geometry.TYPE_BILINEAR,
-					Geometry.FILL_WITH_BLANK).scale(
-					(T) source.subImage(left, top, right, bottom),
-					scaleSize.width, scaleSize.height);
+			return null;
+		return new Rectangle(left, top, right - left, bottom - top);
 	}
 }

@@ -65,6 +65,52 @@ public class ExtractGrid extends ScalableRectangleFeature
 	 *      boolean[][], int, int, int)
 	 */
 	@Override
+//	protected int extract(Sample s, boolean[][] bi, int width, int height,
+//			int beginIndex)
+//	{
+//		// build integral image
+//		double summary = 0.0;
+//		int counter;
+//		double[][] integral = new double[height + 1][width + 1];
+//		for (int y = 1; y <= height; y++, summary += counter)
+//		{
+//			counter = 0;
+//			for (int x = 1; x <= width; x++)
+//			{
+//				if (bi[y - 1][x - 1])
+//					counter++;
+//				integral[y][x] = integral[y - 1][x] + counter;
+//			}
+//		}
+//		// do normalization
+//		if (isScaled)
+//			for (int y = 1; y <= height; y++)
+//				for (int x = 1; x <= width; x++)
+//					integral[y][x] /= summary;
+//		// creating grids
+//		double stepX = width / (double) columns;
+//		double stepY = height / (double) rows;
+//		double x, y, xt, yt;// anchor points of floats
+//		double v00, v01, v10, v11;
+//		int index = beginIndex;// index of the grid
+//		for (int row = 0; row < rows; row++)
+//			for (int column = 0; column < columns; column++)
+//			{
+//				x = stepX * column;
+//				y = stepY * row;
+//				xt = x + stepX;
+//				yt = y + stepY;
+//				// integer anchors
+//				v00 = MathUtils.interpolate(integral, x, y);
+//				v01 = MathUtils.interpolate(integral, x, yt);
+//				v10 = MathUtils.interpolate(integral, xt, y);
+//				v11 = MathUtils.interpolate(integral, xt, yt);
+//				s.insert(index++, v11 - v10 - v01 + v00);
+//				System.out.println(Arrays.toString(new double[] {
+//						v11 - v10 - v01 + v00, v00, v01, v10, v11 }));
+//			}
+//		return index;
+//	}
 	protected int extract(Sample s, boolean[][] bi, int width, int height,
 			int beginIndex)
 	{
@@ -134,7 +180,6 @@ public class ExtractGrid extends ScalableRectangleFeature
 				//					exp.printStackTrace();
 				//					return 0;
 				//				}
-				
 				value = all - left - right - top - bottom + left_top
 						+ left_bottom + right_top + right_bottom;
 				s.insert(index++, value);

@@ -286,4 +286,13 @@ public class HSBImage extends Image
 	public void setPixel(int x, int y, double value)
 	{
 	}
+
+	/**
+	 * @see com.frank.dip.Image#recreate(int, int)
+	 */
+	@Override
+	public Image recreate(int width, int height)
+	{
+		return new HSBImage(width, height);
+	}
 }

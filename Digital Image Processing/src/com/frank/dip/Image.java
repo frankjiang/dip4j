@@ -66,7 +66,7 @@ public abstract class Image extends AbstractImage implements Cloneable
 	 *            the value to set
 	 */
 	public abstract void setPixel(int x, int y, int value);
-	
+
 	/**
 	 * Set the specified value to specified pixel.
 	 * 
@@ -212,9 +212,20 @@ public abstract class Image extends AbstractImage implements Cloneable
 	public abstract Image clone();
 
 	/**
-	 * Recreate an empty image copy with current image dimension.
+	 * Recreate an empty image with current image dimension.
 	 * 
-	 * @return the empty image copy
+	 * @return the empty image
 	 */
 	public abstract Image recreate();
+
+	/**
+	 * Recreate an empty image with specified image dimension.
+	 * 
+	 * @param width
+	 *            the specified width
+	 * @param height
+	 *            the specified height
+	 * @return the empty image
+	 */
+	public abstract Image recreate(int width, int height);
 }
