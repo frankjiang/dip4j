@@ -5,7 +5,7 @@
  * 28, 2014.
  * Use is subject to license terms.
  */
-package com.frank.dip.demo;
+package com.frank.dip.analyze;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;

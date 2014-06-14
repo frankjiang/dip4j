@@ -4,7 +4,7 @@
  * ImageDisplayDialog.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
-package com.frank.dip.demo;
+package com.frank.dip.analyze;
 
 import java.awt.BorderLayout;
 import java.awt.Window;

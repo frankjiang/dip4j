@@ -17,8 +17,8 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import com.frank.dip.Image;
+import com.frank.dip.analyze.ImageDisplayDialog;
 import com.frank.dip.demo.DIPFrame;
-import com.frank.dip.demo.ImageDisplayDialog;
 
 /**
  * The file menu loader.

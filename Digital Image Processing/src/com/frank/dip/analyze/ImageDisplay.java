@@ -5,7 +5,7 @@
  * 2014.
  * Use is subject to license terms.
  */
-package com.frank.dip.demo;
+package com.frank.dip.analyze;
 
 import com.frank.dip.Image;
 
