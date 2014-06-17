@@ -26,4 +26,21 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.frank.dip</groupId>
+  		<artifactId>dip4j</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.frank.swing</groupId>
+  		<artifactId>swing-utils</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.frank.sys</groupId>
+  		<artifactId>sys-utils</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  </dependencies>
 </project>
