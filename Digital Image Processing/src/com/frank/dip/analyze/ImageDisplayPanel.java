@@ -11,11 +11,16 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -24,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -32,8 +38,6 @@ import javax.swing.SwingConstants;
 import com.frank.dip.ColorImage;
 import com.frank.dip.Image;
 import com.frank.dip.geom.Geometry;
-import com.frank.swing.SwingUtils;
-import com.frank.sys.SystemUtils;
 
 /**
  * Image display panel is a panel which can display the image.
@@ -478,9 +482,33 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 	@Override
 	public void copyImage()
 	{
-		SystemUtils.setClipboardImage(image.restore());
-		SwingUtils.noticeMessage(canvas,
-				"The image has been copied to the system clipboard.");
+		// Set to clip board image.
+		Transferable trans = new Transferable()
+		{
+			public DataFlavor[] getTransferDataFlavors()
+			{
+				return new DataFlavor[] { DataFlavor.imageFlavor };
+			}
+
+			public boolean isDataFlavorSupported(DataFlavor flavor)
+			{
+				return DataFlavor.imageFlavor.equals(flavor);
+			}
+
+			public Object getTransferData(DataFlavor flavor)
+					throws UnsupportedFlavorException, IOException
+			{
+				if (isDataFlavorSupported(flavor))
+					return image.restore();
+				throw new UnsupportedFlavorException(flavor);
+			}
+		};
+		Toolkit.getDefaultToolkit().getSystemClipboard()
+				.setContents(trans, null);
+		// Show notice message.
+		JOptionPane.showConfirmDialog(canvas,
+				"The image has been copied to the system clipboard.", "Notice",
+				JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -500,8 +528,7 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 	@Override
 	public Image getImage()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return image;
 	}
 
 	/**

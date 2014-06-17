@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.frank.dip</groupId>
-  <artifactId>dip4j</artifactId>
+  <artifactId>dip4j-demo</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>dip4j</name>
-  <description>A digital image processing framework for Java.</description>
+  <name>dip4j-demo</name>
+  <description>A demo of dip4j.</description>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -26,5 +26,26 @@
       </plugin>
     </plugins>
   </build>
-  <packaging>pom</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.frank.swing</groupId>
+  		<artifactId>swing-utils</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.frank.sys</groupId>
+  		<artifactId>sys-utils</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.frank.math</groupId>
+  		<artifactId>math4j</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.frank.dip</groupId>
+  		<artifactId>dip4j</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

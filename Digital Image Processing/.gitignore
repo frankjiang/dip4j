@@ -1,3 +1,4 @@
 /bin
 /weak
 /target
+*/.DS_Store
