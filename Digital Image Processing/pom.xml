@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.frank.dip</groupId>
   <artifactId>dip4j</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <name>dip4j</name>
   <description>A digital image processing framework for Java.</description>
   <build>
@@ -24,7 +24,18 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-release-plugin</artifactId>
+      	<version>2.5</version>
+      </plugin>
     </plugins>
   </build>
-  <packaging>pom</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.frank.math</groupId>
+  		<artifactId>math4j</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  </dependencies>
 </project>

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.frank.dip</groupId>
   <artifactId>dip4j-demo</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <name>dip4j-demo</name>
   <description>A demo of dip4j.</description>
   <build>
@@ -26,26 +26,4 @@
       </plugin>
     </plugins>
   </build>
-  <dependencies>
-  	<dependency>
-  		<groupId>com.frank.swing</groupId>
-  		<artifactId>swing-utils</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.frank.sys</groupId>
-  		<artifactId>sys-utils</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.frank.math</groupId>
-  		<artifactId>math4j</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.frank.dip</groupId>
-  		<artifactId>dip4j</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
 </project>
