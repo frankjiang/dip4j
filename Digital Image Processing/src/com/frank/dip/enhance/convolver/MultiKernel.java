@@ -6,7 +6,7 @@
 package com.frank.dip.enhance.convolver;
 
 /**
- * The multiple kernel contains two single kernel.
+ * The multiple kernel contains two or more single kernels.
  * 
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
