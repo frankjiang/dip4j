@@ -152,20 +152,15 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 	 *            <code>true</code> if need to hid the pixel information
 	 *            displaying label when the mouse exits the image range
 	 */
-	public ImageDisplayPanel(String title, Image image, boolean showPixelInfo,
-			boolean showAlphaInfo, boolean hidIfExit)
+	public ImageDisplayPanel(String title, Image image, boolean showPixelInfo, boolean showAlphaInfo, boolean hidIfExit)
 	{
 		// Initialize fields.
-		setName(String.format(
-				"%s%s",
-				title,
-				image == null ? "" : String.format(" - %d\u00d7%d",
-						image.width(), image.height())));
+		setName(String.format("%s%s", title,
+				image == null ? "" : String.format(" - %d\u00d7%d", image.width(), image.height())));
 		this.image = image;
 		this.newImage = image.clone();
 		this.imageTitle = title;
-		this.geom = Geometry.getGeometry(image, Geometry.TYPE_BICUBIC,
-				Geometry.FILL_WITH_BLANK);
+		this.geom = Geometry.getGeometry(image, Geometry.TYPE_BICUBIC, Geometry.FILL_WITH_BLANK);
 		this.observable = new InnerObservable();
 		// Initialize the GUI.
 		setLayout(new BorderLayout(0, 0));
@@ -186,13 +181,19 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 				copyImage();
 			}
 		});
-		btnCopyImage.setIcon(new ImageIcon(ImageDisplayDialog.class
-				.getResource("/com/frank/dip/res/clipboard - copy.png")));//$NON-NLS-1$
+		try
+		{
+			btnCopyImage.setIcon(new ImageIcon(ImageDisplayDialog.class
+					.getResource("/com/frank/dip/res/clipboard - copy.png")));//$NON-NLS-1$
+		}
+		catch (NullPointerException e)
+		{
+			btnCopyImage.setText("Copy");
+		}
 		btnCopyImage.setToolTipText("Copy the source image.");
 		toolBar.add(btnCopyImage);
 		btnRotateleft = new JButton("");
-		btnRotateleft
-				.setToolTipText("Left rotate the current image with 90 degree.");
+		btnRotateleft.setToolTipText("Left rotate the current image with 90 degree.");
 		btnRotateleft.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -203,12 +204,17 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 				refreshImage();
 			}
 		});
-		btnRotateleft.setIcon(new ImageIcon(ImageDisplayDialog.class
-				.getResource("/com/frank/dip/res/undo.png")));
+		try
+		{
+			btnRotateleft.setIcon(new ImageIcon(ImageDisplayDialog.class.getResource("/com/frank/dip/res/undo.png")));
+		}
+		catch (NullPointerException e)
+		{
+			btnRotateleft.setText("Rotate Left");
+		}
 		toolBar.add(btnRotateleft);
 		btnRotateright = new JButton("");
-		btnRotateright
-				.setToolTipText("Right rotate the current image with 90 degree.");
+		btnRotateright.setToolTipText("Right rotate the current image with 90 degree.");
 		btnRotateright.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -219,8 +225,14 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 				refreshImage();
 			}
 		});
-		btnRotateright.setIcon(new ImageIcon(ImageDisplayDialog.class
-				.getResource("/com/frank/dip/res/redo.png")));//$NON-NLS-1$
+		try
+		{
+			btnRotateright.setIcon(new ImageIcon(ImageDisplayDialog.class.getResource("/com/frank/dip/res/redo.png")));//$NON-NLS-1$
+		}
+		catch (NullPointerException e)
+		{
+			btnRotateright.setText("Rotate Right");
+		}
 		toolBar.add(btnRotateright);
 		btnReset = new JButton("");//$NON-NLS-1$
 		btnReset.setToolTipText("Reset the current image to the source image.");
@@ -231,8 +243,14 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 				reset();
 			}
 		});
-		btnReset.setIcon(new ImageIcon(ImageDisplayDialog.class
-				.getResource("/com/frank/dip/res/refresh-16.png")));
+		try
+		{
+			btnReset.setIcon(new ImageIcon(ImageDisplayDialog.class.getResource("/com/frank/dip/res/refresh-16.png")));
+		}
+		catch (NullPointerException e)
+		{
+			btnReset.setText("Reset");
+		}
 		toolBar.add(btnReset);
 		comboBox = new JComboBox();
 		comboBox.setEditable(true);
@@ -309,8 +327,7 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 					int w = (w0 - main.width) / 2;
 					int h = (h0 - main.height) / 2;
 					p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
-					updateMouseMotion(p.x < 0 || p.y < 0 || p.x >= w0
-							|| p.y >= h0 ? null : p);
+					updateMouseMotion(p.x < 0 || p.y < 0 || p.x >= w0 || p.y >= h0 ? null : p);
 				}
 			});
 		if (hidIfExit)
@@ -326,14 +343,12 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 					int w = (w0 - main.width) / 2;
 					int h = (h0 - main.height) / 2;
 					p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
-					updateMouseMotion(p.x < 0 || p.y < 0 || p.x >= w0
-							|| p.y >= h0 ? null : p);
+					updateMouseMotion(p.x < 0 || p.y < 0 || p.x >= w0 || p.y >= h0 ? null : p);
 					ImageDisplayPanel.this.validate();
 					int height = lblPixels.getHeight();
 					Dimension d = ImageDisplayPanel.this.getSize();
 					ImageDisplayPanel.this.setSize(d.width, d.height + height);
-					ImageDisplayPanel.this.setCursor(Cursor
-							.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+					ImageDisplayPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 					observable.setChanged();
 					observable.notifyObservers(height);
 				}
@@ -373,21 +388,17 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 		{
 			ColorImage ci = (ColorImage) newImage;
 			if (showAlphaInfo)
-				lblPixels.setText(String.format(
-						"(%d,%d) - ARGB(%d,%d,%d,%d)", point.x,//$NON-NLS-1$
-						point.y, ci.getRed(point.x, point.y),
-						ci.getGreen(point.x, point.y),
+				lblPixels.setText(String.format("(%d,%d) - ARGB(%d,%d,%d,%d)", point.x,//$NON-NLS-1$
+						point.y, ci.getRed(point.x, point.y), ci.getGreen(point.x, point.y),
 						ci.getBlue(point.x, point.y)));
 			else
-				lblPixels.setText(String.format(
-						"(%d,%d) - RGB(%d,%d,%d)", point.x,//$NON-NLS-1$
-						point.y, ci.getRed(point.x, point.y),
-						ci.getGreen(point.x, point.y),
+				lblPixels.setText(String.format("(%d,%d) - RGB(%d,%d,%d)", point.x,//$NON-NLS-1$
+						point.y, ci.getRed(point.x, point.y), ci.getGreen(point.x, point.y),
 						ci.getBlue(point.x, point.y)));
 		}
 		else
-			lblPixels.setText(String.format("(%d,%d) - Gray(%d)", point.x,
-					point.y, newImage.getPixel(point.x, point.y)));
+			lblPixels
+					.setText(String.format("(%d,%d) - Gray(%d)", point.x, point.y, newImage.getPixel(point.x, point.y)));
 	}
 
 	/**
@@ -431,10 +442,8 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 	 */
 	private void updateTitle()
 	{
-		setName(String.format(
-				"%s%s",//$NON-NLS-1$
-				imageTitle,
-				newImage == null ? "" : String.format(" - %d\u00d7%d",//$NON-NLS-1$//$NON-NLS-2$
+		setName(String.format("%s%s",//$NON-NLS-1$
+				imageTitle, newImage == null ? "" : String.format(" - %d\u00d7%d",//$NON-NLS-1$//$NON-NLS-2$
 						newImage.width(), newImage.height())));
 		observable.notifyObservers(getName());
 		observable.setChanged();
@@ -495,19 +504,16 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 				return DataFlavor.imageFlavor.equals(flavor);
 			}
 
-			public Object getTransferData(DataFlavor flavor)
-					throws UnsupportedFlavorException, IOException
+			public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
 			{
 				if (isDataFlavorSupported(flavor))
 					return image.restore();
 				throw new UnsupportedFlavorException(flavor);
 			}
 		};
-		Toolkit.getDefaultToolkit().getSystemClipboard()
-				.setContents(trans, null);
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(trans, null);
 		// Show notice message.
-		JOptionPane.showConfirmDialog(canvas,
-				"The image has been copied to the system clipboard.", "Notice",
+		JOptionPane.showConfirmDialog(canvas, "The image has been copied to the system clipboard.", "Notice",
 				JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 	}
 

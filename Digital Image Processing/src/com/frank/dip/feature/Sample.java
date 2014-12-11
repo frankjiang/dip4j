@@ -14,10 +14,17 @@ import com.frank.math.struct.SparseVector;
  * </p>
  * 
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
- * @version 1.0.0
+ * @version 1.1.0
  */
 public class Sample
 {
+	/**
+	 * The referenced information.
+	 * <p>
+	 * This can be any object.
+	 * </p>
+	 */
+	protected Object				refInfo	= null;
 	/**
 	 * The feature vector.
 	 */
@@ -62,9 +69,8 @@ public class Sample
 		this.size = size;
 		feature = new SparseVector.Double();
 		this.target = target;
-		int index = 0;
 		for (double value : features)
-			feature.insert(index++, value);
+			feature.add(value);
 	}
 
 	/**
@@ -142,5 +148,26 @@ public class Sample
 	public void setSize(int size)
 	{
 		this.size = size;
+	}
+
+	/**
+	 * Returns refInfo.
+	 * 
+	 * @return the refInfo
+	 */
+	public Object getRefInfo()
+	{
+		return refInfo;
+	}
+
+	/**
+	 * Set refInfo.
+	 * 
+	 * @param refInfo
+	 *            the value of refInfo
+	 */
+	public void setRefInfo(Object refInfo)
+	{
+		this.refInfo = refInfo;
 	}
 }
