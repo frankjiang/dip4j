@@ -146,8 +146,8 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 	 */
 	private GrayImage convolveGrayWithInterrupt(GrayImage gi)
 	{
-		int width = gi.width();
-		int height = gi.height();
+		int width = gi.getWidth();
+		int height = gi.getHeight();
 		int w = kernel.width();
 		int h = kernel.height();
 		boolean b = true;
@@ -208,8 +208,8 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 	 */
 	private GrayImage convolveGrayWithNormalize(GrayImage gi)
 	{
-		int width = gi.width();
-		int height = gi.height();
+		int width = gi.getWidth();
+		int height = gi.getHeight();
 		int w = kernel.width();
 		int h = kernel.height();
 		boolean b = true;
@@ -277,8 +277,8 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 	 */
 	private ColorImage convolveColorWithInterrupt(ColorImage ci)
 	{
-		int width = ci.width();
-		int height = ci.height();
+		int width = ci.getWidth();
+		int height = ci.getHeight();
 		int w = kernel.width();
 		int h = kernel.height();
 		boolean b = true;
@@ -299,8 +299,8 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 		// temporary pixels arrays
 		float pixel;
 		int ix, jy, index;
-		for (int y = 0; y < ci.height(); y++)
-			for (int x = 0; x < ci.width(); x++)
+		for (int y = 0; y < ci.getHeight(); y++)
+			for (int x = 0; x < ci.getWidth(); x++)
 				// check edge filling
 				if (x < dw || x >= width - dw || y < dh || y >= height - dh)
 				{
@@ -373,8 +373,8 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 	 */
 	private ColorImage convolveColorWithNormalize(ColorImage ci)
 	{
-		int width = ci.width();
-		int height = ci.height();
+		int width = ci.getWidth();
+		int height = ci.getHeight();
 		int w = kernel.width();
 		int h = kernel.height();
 		boolean b = true;
@@ -404,8 +404,8 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 		float maxBlue = Integer.MIN_VALUE;
 		float pixel;
 		int ix, jy, index;
-		for (int y = 0; y < ci.height(); y++)
-			for (int x = 0; x < ci.width(); x++)
+		for (int y = 0; y < ci.getHeight(); y++)
+			for (int x = 0; x < ci.getWidth(); x++)
 				// check edge filling
 				if (x < dw || x >= width - dw || y < dh || y >= height - dh)
 				{

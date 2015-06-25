@@ -70,8 +70,8 @@ public class GaussianBlurImprovedOperator<T extends Image> extends
 	 */
 	private GrayImage convolveGray(GrayImage source)
 	{
-		int width = source.width() / 2;
-		int height = source.height() / 2;
+		int width = source.getWidth() / 2;
+		int height = source.getHeight() / 2;
 		// int ksize = (int) Math.ceil(sigma * DIMENSION) * 2 + 1;
 		int ksize = 7;
 		if (ksize == 1)
@@ -122,7 +122,7 @@ public class GaussianBlurImprovedOperator<T extends Image> extends
 					}
 				dst.setPixel(x, y, (int) Math.round(mul / sum));
 			}
-		return geom.scale(dst, source.width(), source.height());
+		return geom.scale(dst, source.getWidth(), source.getHeight());
 	}
 
 	/**
@@ -131,8 +131,8 @@ public class GaussianBlurImprovedOperator<T extends Image> extends
 	 */
 	private ColorImage convolveColor(ColorImage source)
 	{
-		int width = source.width() / 2;
-		int height = source.height() / 2;
+		int width = source.getWidth() / 2;
+		int height = source.getHeight() / 2;
 		int ksize = (int) Math.ceil(sigma * DIMENSION) * 2 + 1;
 		if (ksize == 1)
 			return source.clone();
@@ -192,7 +192,7 @@ public class GaussianBlurImprovedOperator<T extends Image> extends
 						(int) Math.round(gmul / sum),
 						(int) Math.round(bmul / sum));
 			}
-		return geom.scale(dst, source.width(), source.height());
+		return geom.scale(dst, source.getWidth(), source.getHeight());
 	}
 
 	/**

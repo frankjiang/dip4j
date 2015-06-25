@@ -39,8 +39,8 @@ public class MorphGray extends Morph<GrayImage>
 	@Override
 	public GrayImage erode(GrayImage image)
 	{
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		int x, y;
 		GrayImage res = image.clone();
 		switch (type)
@@ -115,8 +115,8 @@ public class MorphGray extends Morph<GrayImage>
 	@Override
 	public GrayImage dilate(GrayImage image)
 	{
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		int x, y;
 		GrayImage res = image.clone();
 		switch (type)

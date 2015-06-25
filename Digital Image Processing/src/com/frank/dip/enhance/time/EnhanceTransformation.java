@@ -69,8 +69,8 @@ public abstract class EnhanceTransformation<T extends Image> extends
 
 	protected void doStatistic(T source)
 	{
-		int height = source.height();
-		int width = source.width();
+		int height = source.getHeight();
+		int width = source.getWidth();
 		if (source instanceof GrayImage)
 		{
 			r = new float[height][width];
@@ -137,8 +137,8 @@ public abstract class EnhanceTransformation<T extends Image> extends
 	@Override
 	public T operate(T source)
 	{
-		int height = source.height();
-		int width = source.width();
+		int height = source.getHeight();
+		int width = source.getWidth();
 		if (!(source instanceof BinaryImage) && useHighAccuracyScheme)
 		{
 			doStatistic(source);

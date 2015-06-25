@@ -51,8 +51,8 @@ public class GeometryBinary extends Geometry<BinaryImage>
 	public BinaryImage transform(BinaryImage image, GeometryTransform transform)
 			throws NoninvertibleTransformException
 	{
-		int height = image.height();
-		int width = image.width();
+		int height = image.getHeight();
+		int width = image.getWidth();
 		Rectangle rect = transform.createTransformedShape(new Rectangle(width,
 				height));
 		BinaryImage bi = new BinaryImage(rect.width, rect.height);

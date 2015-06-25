@@ -228,8 +228,8 @@ public abstract class Geometry<T extends Image>
 	 */
 	public T scale(T image, int width, int height)
 	{
-		double sx = width / (double) image.width(), sy = height
-				/ (double) image.height();
+		double sx = width / (double) image.getWidth(), sy = height
+				/ (double) image.getHeight();
 		try
 		{
 			return transform(image, new AffineTransform(
@@ -257,8 +257,8 @@ public abstract class Geometry<T extends Image>
 	 */
 	public T scale(T image, int size, boolean isShort)
 	{
-		double w = image.width();
-		double h = image.height();
+		double w = image.getWidth();
+		double h = image.getHeight();
 		double rate = size / (isShort ? (w < h ? w : h) : (w < h ? h : w));
 		try
 		{

@@ -30,8 +30,8 @@ public final class GrayScaleAverage extends GrayScale
 	{
 		if (image instanceof GrayImage)
 			return (GrayImage) image.clone();
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		GrayImage gi = new GrayImage(width, height);
 		if (image instanceof BinaryImage)
 		{

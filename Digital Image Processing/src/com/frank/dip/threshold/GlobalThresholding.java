@@ -66,8 +66,8 @@ public class GlobalThresholding extends Thresholding
 	@Override
 	public BinaryImage operate(GrayImage source)
 	{
-		int width = source.width();
-		int height = source.height();
+		int width = source.getWidth();
+		int height = source.getHeight();
 		BinaryImage bi = new BinaryImage(width, height);
 		int threshold = finder.threshold(source);
 		for (int y = 0; y < height; y++)

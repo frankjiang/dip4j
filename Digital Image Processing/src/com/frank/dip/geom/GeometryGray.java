@@ -51,8 +51,8 @@ public class GeometryGray extends Geometry<GrayImage>
 	public GrayImage transform(GrayImage image, GeometryTransform transform)
 			throws NoninvertibleTransformException
 	{
-		int height = image.height();
-		int width = image.width();
+		int height = image.getHeight();
+		int width = image.getWidth();
 		Rectangle rect = transform.createTransformedShape(new Rectangle(width,
 				height));
 		GrayImage gi = new GrayImage(rect.width, rect.height);

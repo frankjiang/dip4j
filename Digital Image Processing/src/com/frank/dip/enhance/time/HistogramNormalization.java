@@ -107,8 +107,8 @@ public abstract class HistogramNormalization<T extends Image> extends
 		@Override
 		public GrayImage operate(GrayImage source)
 		{
-			int height = source.height();
-			int width = source.width();
+			int height = source.getHeight();
+			int width = source.getWidth();
 			GrayImage result = source.clone();
 			Histogram.Gray hist = (Histogram.Gray) Histogram.histogram(source);
 			float[] gray = hist.getPDF();
@@ -148,8 +148,8 @@ public abstract class HistogramNormalization<T extends Image> extends
 		@Override
 		public ColorImage operate(ColorImage source)
 		{
-			int height = source.height();
-			int width = source.width();
+			int height = source.getHeight();
+			int width = source.getWidth();
 			ColorImage result = source.clone();
 			Histogram.Color hist = (Histogram.Color) Histogram
 					.histogram(source);

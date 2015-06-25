@@ -369,8 +369,8 @@ public abstract class Histogram implements ColorScaleLevel
 	 */
 	public Histogram(Image image) throws IllegalImageTypeException
 	{
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		area = width * height;
 		int[] pixels = null;
 		if (image instanceof ColorImage)

@@ -57,8 +57,8 @@ public class FourierTransformation
 	 */
 	public void complex(Image source) throws IllegalImageTypeException
 	{
-		width = source.width();
-		height = source.height();
+		width = source.getWidth();
+		height = source.getHeight();
 		if (source instanceof GrayImage || source instanceof BinaryImage)
 			complex = FFT2D.fft(createComplex(source));
 		else if (source instanceof ColorImage)
@@ -79,8 +79,8 @@ public class FourierTransformation
 	 */
 	public GrayImage forward(Image source) throws IllegalImageTypeException
 	{
-		width = source.width();
-		height = source.height();
+		width = source.getWidth();
+		height = source.getHeight();
 		if (source instanceof GrayImage || source instanceof BinaryImage)
 			return perform(source);
 		if (source instanceof ColorImage)

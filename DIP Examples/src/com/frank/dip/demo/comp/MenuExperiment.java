@@ -78,7 +78,7 @@ public class MenuExperiment extends MenuLoader
 							SwingUtils.errorMessage(dip, "Not a color image!");
 							return null;
 						}
-						if (ci.width() > 256 && ci.height() > 256)
+						if (ci.getWidth() > 256 && ci.getHeight() > 256)
 							ci = new GeometryColor().scale(ci, 256, true);
 						GrayImage red = ChannelGrabber.grab(ci,
 								ChannelGrabber.RED);

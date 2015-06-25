@@ -99,8 +99,8 @@ public abstract class ExtractBinaryImageFeature extends FeatureExtractor<Image>
 		// check the validity
 		checkValid(image);
 		// prepare binary image
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		boolean[][] bi;
 		if (image instanceof BinaryImage)
 			bi = ((BinaryImage) image).getBinaryMatrix();

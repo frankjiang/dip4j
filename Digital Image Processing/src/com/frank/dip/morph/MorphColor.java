@@ -39,8 +39,8 @@ public class MorphColor extends Morph<ColorImage>
 	@Override
 	public ColorImage erode(ColorImage image)
 	{
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		int x, y;
 		ColorImage res = image.clone();
 		switch (type)
@@ -194,8 +194,8 @@ public class MorphColor extends Morph<ColorImage>
 	@Override
 	public ColorImage dilate(ColorImage image)
 	{
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		int x, y;
 		ColorImage res = image.clone();
 		switch (type)

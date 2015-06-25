@@ -156,7 +156,7 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 	{
 		// Initialize fields.
 		setName(String.format("%s%s", title,
-				image == null ? "" : String.format(" - %d\u00d7%d", image.width(), image.height())));
+				image == null ? "" : String.format(" - %d\u00d7%d", image.getWidth(), image.getHeight())));
 		this.image = image;
 		this.newImage = image.clone();
 		this.imageTitle = title;
@@ -322,8 +322,8 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 				{
 					Point p = e.getPoint();
 					Dimension main = ((JLabel) e.getSource()).getSize();
-					int w0 = newImage.width();
-					int h0 = newImage.height();
+					int w0 = newImage.getWidth();
+					int h0 = newImage.getHeight();
 					int w = (w0 - main.width) / 2;
 					int h = (h0 - main.height) / 2;
 					p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
@@ -338,8 +338,8 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 				{
 					Point p = e.getPoint();
 					Dimension main = ((JLabel) e.getSource()).getSize();
-					int w0 = newImage.width();
-					int h0 = newImage.height();
+					int w0 = newImage.getWidth();
+					int h0 = newImage.getHeight();
 					int w = (w0 - main.width) / 2;
 					int h = (h0 - main.height) / 2;
 					p.translate(w < 0 ? w : 0, h < 0 ? h : 0);
@@ -444,7 +444,7 @@ public class ImageDisplayPanel extends JPanel implements ImageDisplay
 	{
 		setName(String.format("%s%s",//$NON-NLS-1$
 				imageTitle, newImage == null ? "" : String.format(" - %d\u00d7%d",//$NON-NLS-1$//$NON-NLS-2$
-						newImage.width(), newImage.height())));
+						newImage.getWidth(), newImage.getHeight())));
 		observable.notifyObservers(getName());
 		observable.setChanged();
 	}

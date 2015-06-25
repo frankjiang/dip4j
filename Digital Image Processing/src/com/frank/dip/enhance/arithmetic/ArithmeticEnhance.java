@@ -46,12 +46,12 @@ public class ArithmeticEnhance
 	public <T extends Image> T operate(T left, T right)
 			throws IllegalImageTypeException
 	{
-		int width = left.width();
-		int height = right.height();
-		if (width > right.width())
-			width = right.width();
-		if (height > right.height())
-			height = right.height();
+		int width = left.getWidth();
+		int height = right.getHeight();
+		if (width > right.getWidth())
+			width = right.getWidth();
+		if (height > right.getHeight())
+			height = right.getHeight();
 		if (left instanceof GrayImage)
 		{
 			GrayImage gi = new GrayImage(width, height);

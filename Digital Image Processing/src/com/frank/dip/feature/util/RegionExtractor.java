@@ -227,7 +227,7 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 			throw new IllegalImageTypeException(RegionExtractor.class,
 					source.getClass());
 		// prepare parameters
-		int width = source.width(), height = source.height();
+		int width = source.getWidth(), height = source.getHeight();
 		int top = 0, bottom = height - 1, left = 0, right = width - 1;
 		int x, y;
 		boolean flag;

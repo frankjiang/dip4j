@@ -50,8 +50,8 @@ public class FakeColorTransform extends Operator<GrayImage, ColorImage>
 	@Override
 	public ColorImage operate(GrayImage source)
 	{
-		int width = source.width();
-		int height = source.height();
+		int width = source.getWidth();
+		int height = source.getHeight();
 		ColorImage ci = new ColorImage(width, height);
 		int p;
 		for (int x = 0; x < width; x++)

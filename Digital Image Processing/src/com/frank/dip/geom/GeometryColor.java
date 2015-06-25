@@ -52,8 +52,8 @@ public class GeometryColor extends Geometry<ColorImage>
 	public ColorImage transform(ColorImage image, GeometryTransform transform)
 			throws NoninvertibleTransformException
 	{
-		int height = image.height();
-		int width = image.width();
+		int height = image.getHeight();
+		int width = image.getWidth();
 		Rectangle rect = transform.createTransformedShape(new Rectangle(width,
 				height));
 		ColorImage ci = new ColorImage(rect.width, rect.height);

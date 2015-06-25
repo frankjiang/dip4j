@@ -71,8 +71,8 @@ public class GuassNoiseGenerator extends Operator<Image, Image>
 	private GrayImage operateGray(GrayImage source)
 	{
 		GrayImage res = source.clone();
-		for (int y = 0; y < res.height(); y++)
-			for (int x = 0; x < res.width(); x++)
+		for (int y = 0; y < res.getHeight(); y++)
+			for (int x = 0; x < res.getWidth(); x++)
 				res.setPixel(x, y, (int) (source.getPixel(x, y) + bias()));
 		return res;
 	}
@@ -80,8 +80,8 @@ public class GuassNoiseGenerator extends Operator<Image, Image>
 	private BinaryImage operateBinary(BinaryImage source)
 	{
 		BinaryImage res = source.clone();
-		for (int y = 0; y < res.height(); y++)
-			for (int x = 0; x < res.width(); x++)
+		for (int y = 0; y < res.getHeight(); y++)
+			for (int x = 0; x < res.getWidth(); x++)
 				res.setPixel(x, y, (int) (source.getPixel(x, y) + bias()));
 		return res;
 	}
@@ -89,8 +89,8 @@ public class GuassNoiseGenerator extends Operator<Image, Image>
 	private ColorImage operateColor(ColorImage source)
 	{
 		ColorImage res = source.clone();
-		for (int y = 0; y < res.height(); y++)
-			for (int x = 0; x < res.width(); x++)
+		for (int y = 0; y < res.getHeight(); y++)
+			for (int x = 0; x < res.getWidth(); x++)
 			{
 				res.setRed(x, y, (int) (source.getBlue(x, y) + bias()));
 				res.setGreen(x, y, (int) (source.getGreen(x, y) + bias()));

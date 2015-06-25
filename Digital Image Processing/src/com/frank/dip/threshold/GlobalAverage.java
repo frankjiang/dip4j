@@ -34,8 +34,8 @@ public class GlobalAverage implements ThresholdFinder
 	public int threshold(GrayImage image)
 	{
 		int sum = 0;
-		int height = image.height();
-		int width = image.width();
+		int height = image.getHeight();
+		int width = image.getWidth();
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
 				sum += image.getPixel(x, y);

@@ -105,8 +105,8 @@ public abstract class RectangleFeature extends ExtractBinaryImageFeature
 	@Override
 	protected void checkValid(Image image) throws IllegalArgumentException
 	{
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		if (width < columns || height < rows)
 			throw new IllegalArgumentException(
 					String.format(

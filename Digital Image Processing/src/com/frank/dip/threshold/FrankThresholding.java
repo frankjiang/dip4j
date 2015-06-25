@@ -90,8 +90,8 @@ public class FrankThresholding extends Thresholding
 	@Override
 	public BinaryImage operate(GrayImage source)
 	{
-		int width = source.width();
-		int height = source.height();
+		int width = source.getWidth();
+		int height = source.getHeight();
 		int sizeW = (int) (width * radius);
 		int sizeH = (int) (height * radius);
 		if (sizeW < 1)

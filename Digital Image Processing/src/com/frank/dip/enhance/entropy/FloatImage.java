@@ -38,8 +38,8 @@ public class FloatImage extends AbstractImage
 	 */
 	public FloatImage(Image image, double scaleLevel)
 	{
-		width = image.width();
-		height = image.height();
+		width = image.getWidth();
+		height = image.getHeight();
 		data = new double[height][width];
 		for (int x = 0; x < width; x++)
 			for (int y = 0; y < height; y++)

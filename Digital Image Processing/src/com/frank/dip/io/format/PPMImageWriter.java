@@ -120,8 +120,8 @@ public class PPMImageWriter extends ImageWriter implements NetpbmFormat
 				ios.writeBytes(st.nextToken());
 				ios.write('\n');
 			}
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		ios.writeBytes(String.format("%d %d\n", width, height));//$NON-NLS-1$
 		for (int y = 0; y < height; y++)
 		{
@@ -161,8 +161,8 @@ public class PPMImageWriter extends ImageWriter implements NetpbmFormat
 				ios.writeBytes(st.nextToken());
 				ios.write('\n');
 			}
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		ios.writeBytes(String.format("%d %d\n", width, height));//$NON-NLS-1$
 		ios.writeBytes("255\n");//$NON-NLS-1$
 		int rgb;
@@ -205,8 +205,8 @@ public class PPMImageWriter extends ImageWriter implements NetpbmFormat
 				ios.writeBytes(st.nextToken());
 				ios.write('\n');
 			}
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		ios.writeBytes(String.format("%d %d\n", width, height));//$NON-NLS-1$
 		ios.writeBytes("255\n");//$NON-NLS-1$
 		int rgb;
@@ -253,8 +253,8 @@ public class PPMImageWriter extends ImageWriter implements NetpbmFormat
 				ios.writeBytes(st.nextToken());
 				ios.write('\n');
 			}
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		ios.writeBytes(String.format("%d %d\n", width, height));//$NON-NLS-1$
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
@@ -288,8 +288,8 @@ public class PPMImageWriter extends ImageWriter implements NetpbmFormat
 				ios.writeBytes(st.nextToken());
 				ios.write('\n');
 			}
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		ios.writeBytes(String.format("%d %d\n", width, height));//$NON-NLS-1$
 		ios.writeBytes("255\n");//$NON-NLS-1$
 		for (int y = 0; y < height; y++)
@@ -324,8 +324,8 @@ public class PPMImageWriter extends ImageWriter implements NetpbmFormat
 				ios.writeBytes(st.nextToken());
 				ios.write('\n');
 			}
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		ios.writeBytes(String.format("%d %d\n", width, height));//$NON-NLS-1$
 		ios.writeBytes("255\n");//$NON-NLS-1$
 		int rgb;

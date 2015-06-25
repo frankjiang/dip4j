@@ -76,12 +76,12 @@ public class MenuFilterFrequency extends MenuLoader
 					@Override
 					protected Image perform(Image image)
 					{
-						Function function = new Radius(image.width() * 0.05,
+						Function function = new Radius(image.getWidth() * 0.05,
 								true);
 						Properties properties = function.getProperties();
 						properties.put(rs(Radius.PARAM_D, true),
-								image.width() > image.height() ? image.width()
-										: image.height());
+								image.getWidth() > image.getHeight() ? image.getWidth()
+										: image.getHeight());
 						properties.put(rs(Radius.PARAM_D, false), 0);
 						FunctionDislpayDialog dialog = new FunctionDislpayDialog(
 								null, "Radius Low Pass",
@@ -117,12 +117,12 @@ public class MenuFilterFrequency extends MenuLoader
 					@Override
 					protected Image perform(Image image)
 					{
-						Function function = new Radius(image.width() * 0.05,
+						Function function = new Radius(image.getWidth() * 0.05,
 								false);
 						Properties properties = function.getProperties();
 						properties.put(rs(Radius.PARAM_D, true),
-								image.width() > image.height() ? image.width()
-										: image.height());
+								image.getWidth() > image.getHeight() ? image.getWidth()
+										: image.getHeight());
 						properties.put(rs(Radius.PARAM_D, false), 0);
 						FunctionDislpayDialog dialog = new FunctionDislpayDialog(
 								null, "Radius High Pass",
@@ -360,13 +360,13 @@ public class MenuFilterFrequency extends MenuLoader
 					@Override
 					protected Image perform(Image image)
 					{
-						Function func2 = new Radius(image.width() * 0.05, false);
+						Function func2 = new Radius(image.getWidth() * 0.05, false);
 						EnhanceFilterFunction function = new EnhanceFilterFunction(
 								func2, 1.0, 1.0);
 						Properties properties = function.getProperties();
 						properties.put(rs(Radius.PARAM_D, true),
-								image.width() > image.height() ? image.width()
-										: image.height());
+								image.getWidth() > image.getHeight() ? image.getWidth()
+										: image.getHeight());
 						properties.put(rs(Radius.PARAM_D, false), 0);
 						properties.put(rs(EnhanceFilterFunction.PARAM_A, true),
 								3);
@@ -534,13 +534,13 @@ public class MenuFilterFrequency extends MenuLoader
 					@Override
 					protected Image perform(Image image)
 					{
-						Function func2 = new Radius(image.width() * 0.05, true);
+						Function func2 = new Radius(image.getWidth() * 0.05, true);
 						HomomorphicEnhanceFilterFunction function = new HomomorphicEnhanceFilterFunction(
 								func2, 1.0, 1.0);
 						Properties properties = function.getProperties();
 						properties.put(rs(Radius.PARAM_D, true),
-								image.width() > image.height() ? image.width()
-										: image.height());
+								image.getWidth() > image.getHeight() ? image.getWidth()
+										: image.getHeight());
 						properties.put(rs(Radius.PARAM_D, false), 0);
 						properties.put(
 								rs(HomomorphicEnhanceFilterFunction.PARAM_H,
@@ -595,13 +595,13 @@ public class MenuFilterFrequency extends MenuLoader
 					@Override
 					protected Image perform(Image image)
 					{
-						Function func2 = new Radius(image.width() * 0.05, false);
+						Function func2 = new Radius(image.getWidth() * 0.05, false);
 						HomomorphicEnhanceFilterFunction function = new HomomorphicEnhanceFilterFunction(
 								func2, 1.0, 1.0);
 						Properties properties = function.getProperties();
 						properties.put(rs(Radius.PARAM_D, true),
-								image.width() > image.height() ? image.width()
-										: image.height());
+								image.getWidth() > image.getHeight() ? image.getWidth()
+										: image.getHeight());
 						properties.put(rs(Radius.PARAM_D, false), 0);
 						properties.put(
 								rs(HomomorphicEnhanceFilterFunction.PARAM_H,

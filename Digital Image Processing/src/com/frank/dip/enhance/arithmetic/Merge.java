@@ -63,8 +63,8 @@ public class Merge
 			throw new IllegalArgumentException(
 					"The image collection can not be empty.");
 		Image first = images.iterator().next();
-		int width = first.width();
-		int height = first.height();
+		int width = first.getWidth();
+		int height = first.getHeight();
 		double size = images.size();
 		long[][] data = new long[height][width];
 		String errorFormat = "The image size(%d,%d) is not agreed with (%d, %d).";
@@ -73,9 +73,9 @@ public class Merge
 		{
 			for (Image image : images)
 			{
-				if (image.width() != width || image.height() != height)
+				if (image.getWidth() != width || image.getHeight() != height)
 					throw new IllegalArgumentException(String.format(
-							errorFormat, image.width(), image.height(), width,
+							errorFormat, image.getWidth(), image.getHeight(), width,
 							height));
 				BinaryImage bi = (BinaryImage) image;
 				boolean[][] m = bi.getBinaryMatrix();
@@ -96,9 +96,9 @@ public class Merge
 		{
 			for (Image image : images)
 			{
-				if (image.width() != width || image.height() != height)
+				if (image.getWidth() != width || image.getHeight() != height)
 					throw new IllegalArgumentException(String.format(
-							errorFormat, image.width(), image.height(), width,
+							errorFormat, image.getWidth(), image.getHeight(), width,
 							height));
 				GrayImage gi = (GrayImage) image;
 				for (int y = 0; y < height; y++)
@@ -120,9 +120,9 @@ public class Merge
 			blue = new long[height][width];
 			for (Image image : images)
 			{
-				if (image.width() != width || image.height() != height)
+				if (image.getWidth() != width || image.getHeight() != height)
 					throw new IllegalArgumentException(String.format(
-							errorFormat, image.width(), image.height(), width,
+							errorFormat, image.getWidth(), image.getHeight(), width,
 							height));
 				ColorImage ci = (ColorImage) image;
 				for (int y = 0; y < height; y++)

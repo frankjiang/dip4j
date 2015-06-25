@@ -35,8 +35,8 @@ public class ImageStatistic
 	public static Point2D center(Image image)
 	{
 		int xc = 0, yc = 0;
-		int width = image.width();
-		int height = image.height();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		boolean[][] m = null;
 		if (image instanceof BinaryImage)
 			m = ((BinaryImage) image).getBinaryMatrix();

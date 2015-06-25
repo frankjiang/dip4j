@@ -40,7 +40,7 @@ public abstract class AbstractImage implements java.io.Serializable
 	 * 
 	 * @return the image width
 	 */
-	public int width()
+	public int getWidth()
 	{
 		return width;
 	}
@@ -50,7 +50,7 @@ public abstract class AbstractImage implements java.io.Serializable
 	 * 
 	 * @return the image height
 	 */
-	public int height()
+	public int getHeight()
 	{
 		return height;
 	}
@@ -63,7 +63,7 @@ public abstract class AbstractImage implements java.io.Serializable
 	 */
 	public Dimension size()
 	{
-		return new Dimension(width(), height());
+		return new Dimension(getWidth(), getHeight());
 	}
 
 	/**
