@@ -6,7 +6,7 @@
  */
 package com.frank.dip.feature;
 
-import com.frank.math.struct.SparseVector;
+import com.frank.math.struct.sparse.SparseVector;
 
 /**
  * The data structure for a sample data.

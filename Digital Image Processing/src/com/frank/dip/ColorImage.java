@@ -210,9 +210,7 @@ public class ColorImage extends Image implements ColorScaleLevel
 	@Override
 	public int getPixel(int x, int y)
 	{
-		checkBounds(x, y);
-		return (alpha[y][x] & 0xff) << 24 | (red[y][x] & 0xff) << 16
-				| (green[y][x] & 0xff) << 8 | (blue[y][x] & 0xff);
+		return getRGB(x, y);
 	}
 
 	/**
