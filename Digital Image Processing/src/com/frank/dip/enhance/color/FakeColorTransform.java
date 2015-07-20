@@ -8,7 +8,7 @@ package com.frank.dip.enhance.color;
 
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
-import com.frank.dip.Operator;
+import com.frank.dip.ImageOperate;
 import com.frank.dip.math.Function;
 
 /**
@@ -20,7 +20,7 @@ import com.frank.dip.math.Function;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class FakeColorTransform extends Operator<GrayImage, ColorImage>
+public class FakeColorTransform implements ImageOperate<GrayImage, ColorImage>
 {
 	/**
 	 * The transform functions for color channel mapping.
@@ -45,7 +45,7 @@ public class FakeColorTransform extends Operator<GrayImage, ColorImage>
 	}
 
 	/**
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 */
 	@Override
 	public ColorImage operate(GrayImage source)

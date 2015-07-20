@@ -12,7 +12,7 @@ import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
 import com.frank.dip.Image;
-import com.frank.dip.Operator;
+import com.frank.dip.ImageOperate;
 import com.frank.dip.math.Function;
 
 /**
@@ -25,7 +25,7 @@ import com.frank.dip.math.Function;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class NoiseGenerator extends Operator<Image, Image>
+public class NoiseGenerator implements ImageOperate<Image, Image>
 {
 	/**
 	 * The probability distribution function of the noise.
@@ -57,7 +57,7 @@ public class NoiseGenerator extends Operator<Image, Image>
 	}
 
 	/**
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 */
 	@Override
 	public Image operate(Image source)

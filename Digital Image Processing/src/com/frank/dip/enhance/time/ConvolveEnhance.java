@@ -11,7 +11,7 @@ import com.frank.dip.ColorScaleLevel;
 import com.frank.dip.GrayImage;
 import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
-import com.frank.dip.Operator;
+import com.frank.dip.ImageOperate;
 import com.frank.dip.enhance.convolver.Kernel;
 import com.frank.dip.enhance.convolver.SingleKernel;
 
@@ -23,7 +23,7 @@ import com.frank.dip.enhance.convolver.SingleKernel;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
+public class ConvolveEnhance<T extends Image> implements ImageOperate<T, T>,
 		ColorScaleLevel
 {
 	/**
@@ -102,7 +102,7 @@ public class ConvolveEnhance<T extends Image> extends Operator<T, T> implements
 	}
 
 	/**
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 * @throws IllegalImageTypeException
 	 *             if the image type is not supported
 	 */

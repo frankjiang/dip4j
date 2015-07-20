@@ -17,7 +17,7 @@ import com.frank.dip.GrayImage;
 import com.frank.dip.IllegalImageContentException;
 import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
-import com.frank.dip.Operator;
+import com.frank.dip.ImageOperate;
 import com.frank.dip.geom.Geometry;
 
 /**
@@ -29,7 +29,7 @@ import com.frank.dip.geom.Geometry;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class RegionExtractor<T extends Image> extends Operator<T, T>
+public class RegionExtractor<T extends Image> implements ImageOperate<T, T>
 {
 	/**
 	 * Color of background (the part can be remove).
@@ -167,7 +167,7 @@ public class RegionExtractor<T extends Image> extends Operator<T, T>
 	/**
 	 * @throws IllegalImageContentException
 	 *             if no bound found in the specified image
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 */
 	@Override
 	public T operate(T source) throws RuntimeException

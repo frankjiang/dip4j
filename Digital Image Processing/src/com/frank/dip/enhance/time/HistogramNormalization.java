@@ -11,7 +11,7 @@ import com.frank.dip.ColorScaleLevel;
 import com.frank.dip.GrayImage;
 import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
-import com.frank.dip.Operator;
+import com.frank.dip.ImageOperate;
 import com.frank.dip.analyze.Histogram;
 import com.frank.dip.math.Function;
 import com.frank.dip.math.InverseIntegralFunction;
@@ -27,8 +27,7 @@ import com.frank.dip.math.PiecewiseAverage;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public abstract class HistogramNormalization<T extends Image> extends
-		Operator<T, T> implements ColorScaleLevel
+public abstract class HistogramNormalization<T extends Image> implements ImageOperate<T, T>, ColorScaleLevel
 {
 	/**
 	 * The gray scale stretch will be performed according to this function.
@@ -43,8 +42,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 	 */
 	public HistogramNormalization(Function function)
 	{
-		this.function = new InverseIntegralFunction(function, 0,
-				COLOR_SCALE_LEVEL, 1);
+		this.function = new InverseIntegralFunction(function, 0, COLOR_SCALE_LEVEL, 1);
 	}
 
 	/**
@@ -58,8 +56,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 	 * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
 	 * @version 1.0.0
 	 */
-	public static final class Binary extends
-			HistogramNormalization<BinaryImage>
+	public static final class Binary extends HistogramNormalization<BinaryImage>
 	{
 		/**
 		 * Construct an instance of <tt>Binary</tt>.
@@ -72,7 +69,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 		}
 
 		/**
-		 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+		 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 		 */
 		@Override
 		public BinaryImage operate(BinaryImage source)
@@ -102,7 +99,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 		}
 
 		/**
-		 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+		 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 		 */
 		@Override
 		public GrayImage operate(GrayImage source)
@@ -116,8 +113,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 				gray[i] += gray[i - 1];
 			for (int y = 0; y < height; y++)
 				for (int x = 0; x < width; x++)
-					result.setPixel(x, y, limit((int) function
-							.function(gray[result.getPixel(x, y)])));
+					result.setPixel(x, y, limit((int) function.function(gray[result.getPixel(x, y)])));
 			return result;
 		}
 	}
@@ -143,7 +139,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 		}
 
 		/**
-		 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+		 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 		 */
 		@Override
 		public ColorImage operate(ColorImage source)
@@ -151,8 +147,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 			int height = source.getHeight();
 			int width = source.getWidth();
 			ColorImage result = source.clone();
-			Histogram.Color hist = (Histogram.Color) Histogram
-					.histogram(source);
+			Histogram.Color hist = (Histogram.Color) Histogram.histogram(source);
 			float[] red = hist.getPDFRed();
 			float[] blue = hist.getPDFBlue();
 			float[] green = hist.getPDFGreen();
@@ -165,12 +160,9 @@ public abstract class HistogramNormalization<T extends Image> extends
 			for (int y = 0; y < height; y++)
 				for (int x = 0; x < width; x++)
 				{
-					result.setRed(x, y, limit((int) function
-							.function(red[result.getRed(x, y)])));
-					result.setBlue(x, y, limit((int) function
-							.function(blue[result.getBlue(x, y)])));
-					result.setGreen(x, y, limit((int) function
-							.function(green[result.getGreen(x, y)])));
+					result.setRed(x, y, limit((int) function.function(red[result.getRed(x, y)])));
+					result.setBlue(x, y, limit((int) function.function(blue[result.getBlue(x, y)])));
+					result.setGreen(x, y, limit((int) function.function(green[result.getGreen(x, y)])));
 				}
 			return result;
 		}
@@ -186,8 +178,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 	 *            the source image
 	 * @return the image normalized
 	 */
-	public static <T extends Image> T histogramNormalize(Function function,
-			T source)
+	public static <T extends Image> T histogramNormalize(Function function, T source)
 	{
 		if (source instanceof GrayImage)
 			return (T) new Gray(function).operate((GrayImage) source);
@@ -195,8 +186,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 			return (T) new Color(function).operate((ColorImage) source);
 		if (source instanceof BinaryImage)
 			return (T) new Binary(function).operate((BinaryImage) source);
-		throw new IllegalImageTypeException("Historgam normalization",
-				source.getClass());
+		throw new IllegalImageTypeException("Historgam normalization", source.getClass());
 	}
 
 	/**
@@ -209,8 +199,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 	 *            the specified image type
 	 * @return the histogram normalization
 	 */
-	public static <T extends Image> HistogramNormalization<T> getHistogramNormalizatoin(
-			Function function, Class<T> type)
+	public static <T extends Image> HistogramNormalization<T> getHistogramNormalizatoin(Function function, Class<T> type)
 	{
 		if (type == GrayImage.class)
 			return (HistogramNormalization<T>) new Gray(function);
@@ -241,8 +230,7 @@ public abstract class HistogramNormalization<T extends Image> extends
 	 */
 	private static int limit(int value)
 	{
-		return value >= COLOR_SCALE_LEVEL ? (COLOR_SCALE_LEVEL - 1)
-				: (value < 0 ? 0 : value);
+		return value >= COLOR_SCALE_LEVEL ? (COLOR_SCALE_LEVEL - 1) : (value < 0 ? 0 : value);
 	}
 	// int height = pixels.length;
 	// int width = pixels[0].length;

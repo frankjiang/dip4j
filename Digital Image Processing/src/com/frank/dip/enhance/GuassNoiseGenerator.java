@@ -13,7 +13,7 @@ import com.frank.dip.ColorImage;
 import com.frank.dip.GrayImage;
 import com.frank.dip.IllegalImageTypeException;
 import com.frank.dip.Image;
-import com.frank.dip.Operator;
+import com.frank.dip.ImageOperate;
 
 /**
  * The Guass distribution subjected noise generator.
@@ -23,7 +23,7 @@ import com.frank.dip.Operator;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public class GuassNoiseGenerator extends Operator<Image, Image>
+public class GuassNoiseGenerator implements ImageOperate<Image, Image>
 {
 	/**
 	 * The parameter of mean: <code>&mu;</code>
@@ -54,7 +54,7 @@ public class GuassNoiseGenerator extends Operator<Image, Image>
 	}
 
 	/**
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 */
 	@Override
 	public Image operate(Image source) throws IllegalImageTypeException

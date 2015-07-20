@@ -23,7 +23,7 @@ import com.frank.dip.Image;
 public final class GrayScaleCoefficient extends GrayScale
 {
 	/**
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 */
 	@Override
 	public GrayImage operate(Image image)

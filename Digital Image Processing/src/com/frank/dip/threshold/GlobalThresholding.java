@@ -61,7 +61,7 @@ public class GlobalThresholding extends Thresholding
 	 * Perform thresholding algorithm to the source image. The thresholding
 	 * algorithm is defined by {@linkplain ThresholdFinder}.
 	 * 
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 */
 	@Override
 	public BinaryImage operate(GrayImage source)

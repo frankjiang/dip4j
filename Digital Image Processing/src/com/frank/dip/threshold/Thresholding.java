@@ -7,7 +7,7 @@ package com.frank.dip.threshold;
 
 import com.frank.dip.BinaryImage;
 import com.frank.dip.GrayImage;
-import com.frank.dip.Operator;
+import com.frank.dip.ImageOperate;
 
 /**
  * A super class definition for all the thresholding algorithms.
@@ -15,7 +15,7 @@ import com.frank.dip.Operator;
  * @author <a href="mailto:jiangfan0576@gmail.com">Frank Jiang</a>
  * @version 1.0.0
  */
-public abstract class Thresholding extends Operator<GrayImage, BinaryImage>
+public abstract class Thresholding implements ImageOperate<GrayImage, BinaryImage>
 {
 	/**
 	 * @see java.lang.Object#toString()

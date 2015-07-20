@@ -62,7 +62,7 @@ public class FBClustering extends Thresholding
 	}
 
 	/**
-	 * @see com.frank.dip.Operator#operate(com.frank.dip.Image)
+	 * @see com.frank.dip.ImageOperate#operate(com.frank.dip.Image)
 	 */
 	@Override
 	public BinaryImage operate(GrayImage source)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2011, 2020, Frank Jiang and/or its affiliates. All rights
  * reserved.
- * Operator.java is PROPRIETARY/CONFIDENTIAL built in 2013.
+ * ImageOperate.java is PROPRIETARY/CONFIDENTIAL built in 2013.
  * Use is subject to license terms.
  */
 package com.frank.dip;
@@ -20,7 +20,7 @@ package com.frank.dip;
  *            the type of result image
  * @version 1.0.0
  */
-public abstract class Operator<SOURCE extends Image, RESULT extends Image>
+public interface ImageOperate<SOURCE extends Image, RESULT extends Image>
 {
 	/**
 	 * Operate the source image with specified method which is waiting to be
@@ -30,5 +30,5 @@ public abstract class Operator<SOURCE extends Image, RESULT extends Image>
 	 *            the source image
 	 * @return the result image after operator performed
 	 */
-	public abstract RESULT operate(SOURCE source);
+	public RESULT operate(SOURCE source);
 }
