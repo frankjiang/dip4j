@@ -6,6 +6,8 @@
  */
 package com.frank.dip.enhance.arithmetic;
 
+import java.util.ArrayList;
+
 import com.frank.dip.BinaryImage;
 import com.frank.dip.ColorImage;
 import com.frank.dip.ColorScaleLevel;
@@ -25,6 +27,50 @@ import com.frank.dip.Image;
  */
 public class Merge
 {
+	/**
+	 * Merge the specified images.
+	 * <p>
+	 * The before and after merging image type comparison table.
+	 * <table>
+	 * <tr>
+	 * <td><strong>Before</strong></td>
+	 * <td><strong>After</strong></td>
+	 * </tr>
+	 * <tr>
+	 * <td>Binary Image</td>
+	 * <td>Gray Image</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Gray Image</td>
+	 * <td>Gray Image</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Color Image</td>
+	 * <td>Color Image</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Other Image</td>
+	 * <td>Display Error</td>
+	 * </tr>
+	 * </table>
+	 * </p>
+	 * 
+	 * @param images
+	 *            the specified images to merge
+	 * @return the merged image
+	 */
+	public Image operate(Image... images)
+	{
+		if (images.length < 1)
+			return null;
+		if (images.length < 2)
+			return images[0];
+		ArrayList<Image> array = new ArrayList<>(images.length);
+		for (Image image : images)
+			array.add(image);
+		return operate(array);
+	}
+
 	/**
 	 * Merge the specified image collection.
 	 * <p>
@@ -55,13 +101,12 @@ public class Merge
 	 * 
 	 * @param images
 	 *            the specified image collection to merge
-	 * @return the merged image collection
+	 * @return the merged image
 	 */
 	public Image operate(java.util.Collection<? extends Image> images)
 	{
 		if (images.isEmpty())
-			throw new IllegalArgumentException(
-					"The image collection can not be empty.");
+			throw new IllegalArgumentException("The image collection can not be empty.");
 		Image first = images.iterator().next();
 		int width = first.getWidth();
 		int height = first.getHeight();
@@ -74,9 +119,8 @@ public class Merge
 			for (Image image : images)
 			{
 				if (image.getWidth() != width || image.getHeight() != height)
-					throw new IllegalArgumentException(String.format(
-							errorFormat, image.getWidth(), image.getHeight(), width,
-							height));
+					throw new IllegalArgumentException(String.format(errorFormat, image.getWidth(),
+							image.getHeight(), width, height));
 				BinaryImage bi = (BinaryImage) image;
 				boolean[][] m = bi.getBinaryMatrix();
 				for (int y = 0; y < height; y++)
@@ -87,8 +131,7 @@ public class Merge
 			GrayImage image = new GrayImage(width, height);
 			for (int y = 0; y < height; y++)
 				for (int x = 0; x < width; x++)
-					image.setPixel(x, y, data[y][x] / size
-							* ColorScaleLevel.COLOR_SCALE_LEVEL);
+					image.setPixel(x, y, data[y][x] / size * ColorScaleLevel.COLOR_SCALE_LEVEL);
 			return image;
 		}
 		// gray image
@@ -97,9 +140,8 @@ public class Merge
 			for (Image image : images)
 			{
 				if (image.getWidth() != width || image.getHeight() != height)
-					throw new IllegalArgumentException(String.format(
-							errorFormat, image.getWidth(), image.getHeight(), width,
-							height));
+					throw new IllegalArgumentException(String.format(errorFormat, image.getWidth(),
+							image.getHeight(), width, height));
 				GrayImage gi = (GrayImage) image;
 				for (int y = 0; y < height; y++)
 					for (int x = 0; x < width; x++)
@@ -121,9 +163,8 @@ public class Merge
 			for (Image image : images)
 			{
 				if (image.getWidth() != width || image.getHeight() != height)
-					throw new IllegalArgumentException(String.format(
-							errorFormat, image.getWidth(), image.getHeight(), width,
-							height));
+					throw new IllegalArgumentException(String.format(errorFormat, image.getWidth(),
+							image.getHeight(), width, height));
 				ColorImage ci = (ColorImage) image;
 				for (int y = 0; y < height; y++)
 					for (int x = 0; x < width; x++)

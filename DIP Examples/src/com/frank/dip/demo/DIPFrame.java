@@ -1,6 +1,7 @@
 package com.frank.dip.demo;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -51,10 +52,6 @@ import com.frank.dip.demo.comp.MenuFilter;
 import com.frank.dip.demo.comp.MenuGeometry;
 import com.frank.dip.demo.comp.MenuMorph;
 import com.frank.dip.demo.comp.MenuThreshold;
-import com.frank.dip.enhance.convolver.Convolver;
-import com.frank.dip.enhance.convolver.GaussianBlurImprovedOperator;
-import com.frank.dip.enhance.convolver.GaussianBlurKernel;
-import com.frank.dip.geom.Geometry;
 import com.frank.swing.PerformanceManager;
 import com.frank.swing.SwingUtils;
 import com.frank.sys.SystemUtils;
@@ -79,7 +76,7 @@ public class DIPFrame extends JFrame implements Observer
 	/**
 	 * The image of test image.
 	 */
-	public static final String					TEST_IMAGE_PATH			= "/com/frank/dip/res/lena-gray.png";		// "/com/frank/dip/res/weak/0001.jpg";		//$NON-NLS-1$;
+	public static final String					TEST_IMAGE_PATH			= "/com/frank/dip/res/lena-color.png";		// "/com/frank/dip/res/weak/0001.jpg";		//$NON-NLS-1$;
 	/**
 	 * serialVersionUID.
 	 */
@@ -91,7 +88,7 @@ public class DIPFrame extends JFrame implements Observer
 	/**
 	 * The short string of {@linkplain #timeunit}.
 	 */
-	private String								timeunitStr				= "ms";									//$NON-NLS-1$
+	private String								timeunitStr				= "ms";										//$NON-NLS-1$
 	/**
 	 * Current image file name.
 	 */
@@ -205,7 +202,8 @@ public class DIPFrame extends JFrame implements Observer
 	 */
 	public DIPFrame()
 	{
-		setIconImage(Toolkit.getDefaultToolkit().getImage(DIPFrame.class.getResource("/com/frank/dip/res/icon.png")));//$NON-NLS-1$
+		setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(DIPFrame.class.getResource("/com/frank/dip/res/icon.png")));//$NON-NLS-1$
 		// Set system frame style.
 		SwingUtils.setSystemLookAndFeel(this);
 		// Initialize the image processing history record.
@@ -282,10 +280,12 @@ public class DIPFrame extends JFrame implements Observer
 		contentPane.add(toolBar, BorderLayout.NORTH);
 		btnOpen = new JButton("");//$NON-NLS-1$
 		btnOpen.setToolTipText("Open");
-		btnOpen.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/file - open.png")));//$NON-NLS-1$
+		btnOpen.setIcon(
+				new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/file - open.png")));//$NON-NLS-1$
 		toolBar.add(btnOpen);
 		btnSave = new JButton("");
-		btnSave.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/file - save.png")));//$NON-NLS-1$
+		btnSave.setIcon(
+				new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/file - save.png")));//$NON-NLS-1$
 		btnSave.setToolTipText("Save");
 		toolBar.add(btnSave);
 		btnShowPixels = new JButton("");
@@ -296,17 +296,20 @@ public class DIPFrame extends JFrame implements Observer
 				flagOfShowingPixels = !flagOfShowingPixels;
 				if (flagOfShowingPixels)
 				{
-					btnShowPixels.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/ok.png")));//$NON-NLS-1$
+					btnShowPixels.setIcon(
+							new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/ok.png")));//$NON-NLS-1$
 					btnShowPixels.setToolTipText("Click to stop showing pixels information");
 				}
 				else
 				{
-					btnShowPixels.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/cancel.png")));//$NON-NLS-1$
+					btnShowPixels.setIcon(new ImageIcon(
+							DIPFrame.class.getResource("/com/frank/dip/res/cancel.png")));//$NON-NLS-1$
 					btnShowPixels.setToolTipText("Click to show pixels information");
 				}
 			}
 		});
-		btnShowPixels.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/ok.png")));//$NON-NLS-1$
+		btnShowPixels
+				.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/ok.png")));//$NON-NLS-1$
 		btnShowPixels.setToolTipText("Click to stop showing pixels information");
 		toolBar.add(btnShowPixels);
 		JButton button = new JButton("");
@@ -318,11 +321,13 @@ public class DIPFrame extends JFrame implements Observer
 			}
 		});
 		button.setToolTipText("Load the default image.");
-		button.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/sun/java/swing/plaf/windows/icons/HardDrive.gif")));//$NON-NLS-1$
+		button.setIcon(new ImageIcon(DIPFrame.class
+				.getResource("/com/sun/java/swing/plaf/windows/icons/HardDrive.gif")));//$NON-NLS-1$
 		toolBar.add(button);
 		btnTest = new JButton("");
 		btnTest.setToolTipText("Test Algorithms");
-		btnTest.setIcon(new ImageIcon(DIPFrame.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));//$NON-NLS-1$
+		btnTest.setIcon(new ImageIcon(
+				DIPFrame.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));//$NON-NLS-1$
 		toolBar.add(btnTest);
 		JButton btnCloseDialogs = new JButton("");
 		btnCloseDialogs.setMnemonic('C');
@@ -335,7 +340,8 @@ public class DIPFrame extends JFrame implements Observer
 				wins.clear();
 			}
 		});
-		btnCloseDialogs.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/cance-2.png")));
+		btnCloseDialogs.setIcon(
+				new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/cance-2.png")));
 		btnCloseDialogs.setToolTipText("Alt+C: Close all the image displaying dialogs.");
 		toolBar.add(btnCloseDialogs);
 		btnTest.addActionListener(new ActionListener()
@@ -387,39 +393,36 @@ public class DIPFrame extends JFrame implements Observer
 	{
 		new Performance("Test", "Test Method")
 		{
-			@SuppressWarnings("unused")
-			Image separate(Image image, double sigma)
-			{
-				GaussianBlurImprovedOperator op = new GaussianBlurImprovedOperator(sigma);
-				return op.operate(image);
-			}
-
-			@SuppressWarnings("unused")
-			Image scale(Image image, double sigma, double theta)
-			{
-				Geometry geom = Geometry.getGeometry(image, Geometry.TYPE_BICUBIC, Geometry.FILL_WITH_BLANK);
-				Convolver conv = new Convolver(new GaussianBlurKernel(7, 7, (float) sigma),
-						Convolver.HINT_ACCURACY_INTERRUPT, Convolver.HINT_EDGE_SOURCE);
-				Image down = geom.scaleByRate(image, image.getWidth() * theta, image.getHeight() * theta);
-				down = conv.operate(down);
-				return geom.scale(down, image.getWidth(), image.getHeight());
-			}
-
-			Image norm(Image image, double sigma)
-			{
-				Convolver conv = new Convolver(new GaussianBlurKernel(7, 7, (float) sigma),
-						Convolver.HINT_ACCURACY_INTERRUPT, Convolver.HINT_EDGE_SOURCE);
-				return conv.operate(image);
-			}
-
 			@Override
 			protected Image perform(Image image)
 			{
-				String sigmaStr = SwingUtils.inputDialog(DIPFrame.this, "SIGMA", "Input sigma:", "2.0");
-				if (sigmaStr == null)
-					return null;
-				double sigma = Double.valueOf(sigmaStr);
-				return norm(image, sigma);
+				ColorImage ci = null;
+				if (image instanceof ColorImage)
+					ci = (ColorImage) image;
+				else
+					ci = new ColorImage(image);
+
+				int r, g, b;
+				double margin = 30;
+				float[] hsbvals = new float[3];
+				ColorImage res = ci.recreate();
+				for (int y = 0; y < ci.getHeight(); y++)
+					for (int x = 0; x < ci.getWidth(); x++)
+					{
+						r = ci.getRed(x, y);
+						g = ci.getGreen(x, y);
+						b = ci.getBlue(x, y);
+						Color.RGBtoHSB(r, g, b, hsbvals);
+						if ((r < 250 || g < 250 || b < 250)
+								&& ((hsbvals[0] > (360 - margin) / 360 || hsbvals[0] < margin / 360)
+								|| (hsbvals[0] > (120 - margin) / 360 && hsbvals[0] < (120 + margin) / 360)))
+						{
+							res.setPixel(x, y, Color.BLACK.getRGB());
+						}
+						else
+							res.setPixel(x, y, ci.getRGB(x, y));
+					}
+				return res;
 			}
 		}.perform();
 	}
@@ -452,8 +455,8 @@ public class DIPFrame extends JFrame implements Observer
 	 */
 	public void updateCanvasTitle(Image image)
 	{
-		String title = image == null ? "No Image" : String.format("%s - %d\u00d7%d", filename, image.getWidth(),
-				image.getHeight());
+		String title = image == null ? "No Image"
+				: String.format("%s - %d\u00d7%d", filename, image.getWidth(), image.getHeight());
 		lblStatus.setText(title);
 		splitPane.resetToPreferredSizes();
 		if (pm.isEmpty())
@@ -495,8 +498,8 @@ public class DIPFrame extends JFrame implements Observer
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				Transferable transferable = clipboard.getContents(null);
 				mntmPaste.setEnabled(transferable != null
-						&& (transferable.isDataFlavorSupported(DataFlavor.imageFlavor) || transferable
-								.isDataFlavorSupported(DataFlavor.stringFlavor)));
+						&& (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)
+								|| transferable.isDataFlavorSupported(DataFlavor.stringFlavor)));
 				// update the status of copy menu item
 				mntmCopy.setEnabled(!pm.isEmpty());
 			}
@@ -544,10 +547,16 @@ public class DIPFrame extends JFrame implements Observer
 				updateStep();
 			}
 		});
-		mntmRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, controlKey));
+
+		if (System.getProperty("os.name").toLowerCase().contains("mac"))
+			mntmRedo.setAccelerator(
+					KeyStroke.getKeyStroke(KeyEvent.VK_Z, controlKey | KeyEvent.SHIFT_MASK));
+		else
+			mntmRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, controlKey));
 		mnEdit.add(mntmRedo);
 		mntmCopy = new JMenuItem("Copy");
-		mntmCopy.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/clipboard - copy.png")));
+		mntmCopy.setIcon(new ImageIcon(
+				DIPFrame.class.getResource("/com/frank/dip/res/clipboard - copy.png")));
 		mntmCopy.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -560,7 +569,8 @@ public class DIPFrame extends JFrame implements Observer
 		mntmCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, controlKey));
 		mnEdit.add(mntmCopy);
 		mntmPaste = new JMenuItem("Paste");
-		mntmPaste.setIcon(new ImageIcon(DIPFrame.class.getResource("/com/frank/dip/res/clipboard - paste.png")));
+		mntmPaste.setIcon(new ImageIcon(
+				DIPFrame.class.getResource("/com/frank/dip/res/clipboard - paste.png")));
 		mntmPaste.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -641,12 +651,12 @@ public class DIPFrame extends JFrame implements Observer
 			{
 				ColorImage ci = (ColorImage) im;
 				lblPosition.setText(String.format("(%d,%d) - ARGB(%d,%d,%d,%d)", point.x, point.y,
-						ci.getAlpha(point.x, point.y), ci.getRed(point.x, point.y), ci.getGreen(point.x, point.y),
-						ci.getBlue(point.x, point.y)));
+						ci.getAlpha(point.x, point.y), ci.getRed(point.x, point.y),
+						ci.getGreen(point.x, point.y), ci.getBlue(point.x, point.y)));
 			}
 			else
-				lblPosition
-						.setText(String.format("(%d,%d) - Gray(%d)", point.x, point.y, im.getPixel(point.x, point.y)));
+				lblPosition.setText(String.format("(%d,%d) - Gray(%d)", point.x, point.y,
+						im.getPixel(point.x, point.y)));
 		}
 		else
 			lblPosition.setText("");
@@ -690,7 +700,8 @@ public class DIPFrame extends JFrame implements Observer
 		catch (Exception e1)
 		{
 			e1.printStackTrace();
-			SwingUtils.errorMessage(DIPFrame.this, String.format("Not spported image format/file: %s", filename));
+			SwingUtils.errorMessage(DIPFrame.this,
+					String.format("Not spported image format/file: %s", filename));
 			canvas.setText("No Image");
 			updateCanvasTitle(null);
 			canvas.setIcon(null);
@@ -720,7 +731,8 @@ public class DIPFrame extends JFrame implements Observer
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			SwingUtils.errorMessage(DIPFrame.this, String.format("Not spported image format/file: %s", file.getName()));
+			SwingUtils.errorMessage(DIPFrame.this,
+					String.format("Not spported image format/file: %s", file.getName()));
 			canvas.setText("No Image");
 			updateCanvasTitle(null);
 			canvas.setIcon(null);
@@ -775,7 +787,8 @@ public class DIPFrame extends JFrame implements Observer
 				catch (Exception e)
 				{
 					e.printStackTrace();
-					SwingUtils.errorMessage(this, String.format("Save image failed: %s", e.getLocalizedMessage()));
+					SwingUtils.errorMessage(this,
+							String.format("Save image failed: %s", e.getLocalizedMessage()));
 				}
 			}
 		}

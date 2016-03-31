@@ -24,9 +24,12 @@ import com.frank.dip.analyze.ImageDisplayDialog;
 import com.frank.dip.demo.DIPFrame;
 import com.frank.dip.enhance.GrayScaleAverage;
 import com.frank.dip.enhance.GrayScaleCoefficient;
+import com.frank.dip.enhance.GrayScaleMinimum;
 import com.frank.dip.enhance.arithmetic.Arithmetic;
 import com.frank.dip.enhance.arithmetic.ArithmeticEnhance;
+import com.frank.dip.enhance.color.DarkChannelPrior;
 import com.frank.dip.enhance.color.FakeColorTransform;
+import com.frank.dip.enhance.time.Dehaze;
 import com.frank.dip.enhance.time.HistogramNormalization;
 import com.frank.dip.enhance.time.InversionTransformation;
 import com.frank.dip.enhance.time.LogarithmicTransformation;
@@ -87,8 +90,10 @@ public class MenuEnhance extends MenuLoader
 				}.perform();
 			}
 		});
+		
 		JMenu mnGrayScale = new JMenu("Gray Scale");
 		mnEnhance.add(mnGrayScale);
+		
 		JMenuItem mntmGrayScaleAverage = new JMenuItem("Average");
 		mntmGrayScaleAverage.addActionListener(new ActionListener()
 		{
@@ -101,8 +106,8 @@ public class MenuEnhance extends MenuLoader
 					{
 						Timer t = TestUtils.getTimer();
 						t.start();
-						Image res = image instanceof ColorImage ? new GrayScaleAverage()
-								.operate((ColorImage) image) : image;
+						Image res = image instanceof ColorImage
+								? new GrayScaleAverage().operate((ColorImage) image) : image;
 						time = t.getTime(timeunit);
 						return res;
 					}
@@ -110,6 +115,7 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnGrayScale.add(mntmGrayScaleAverage);
+		
 		JMenuItem mntmGrayScaleCoefficient = new JMenuItem("Coefficient");
 		mntmGrayScaleCoefficient.addActionListener(new ActionListener()
 		{
@@ -122,8 +128,8 @@ public class MenuEnhance extends MenuLoader
 					{
 						Timer t = TestUtils.getTimer();
 						t.start();
-						Image res = image instanceof ColorImage ? new GrayScaleCoefficient()
-								.operate((ColorImage) image) : image;
+						Image res = image instanceof ColorImage
+								? new GrayScaleCoefficient().operate((ColorImage) image) : image;
 						time = t.getTime(timeunit);
 						return res;
 					}
@@ -132,6 +138,29 @@ public class MenuEnhance extends MenuLoader
 		});
 		mnGrayScale.add(mntmGrayScaleCoefficient);
 		mnEnhance.add(mntmInverse);
+		
+		JMenuItem mntmGrayScaleMinimum = new JMenuItem("Minimum");
+		mntmGrayScaleMinimum.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				dip.new Performance("Enhance", "Gray Scale Minimum")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image res = image instanceof ColorImage
+								? new GrayScaleMinimum().operate((ColorImage) image) : image;
+						time = t.getTime(timeunit);
+						return res;
+					}
+				}.perform();
+			}
+		});
+		mnGrayScale.add(mntmGrayScaleMinimum);
+		
 		JMenuItem mntmLogarithm = new JMenuItem("Logarithm");
 		mntmLogarithm.addActionListener(new ActionListener()
 		{
@@ -143,25 +172,20 @@ public class MenuEnhance extends MenuLoader
 					protected Image perform(Image image)
 					{
 						LogarithmicTransformation trans = LogarithmicTransformation
-								.getLogarithmTransformation(image.getClass(),
-										255 / Math.log1p(256), 0.0);
+								.getLogarithmTransformation(image.getClass(), 255 / Math.log1p(256),
+										0.0);
 						Properties properties = new Properties();
-						String minB = LogarithmicTransformation.PARAM_B
-								+ "_min";//$NON-NLS-1$
-						String maxB = LogarithmicTransformation.PARAM_B
-								+ "_max";//$NON-NLS-1$
-						String minC = LogarithmicTransformation.PARAM_C
-								+ "_min";//$NON-NLS-1$
-						String maxC = LogarithmicTransformation.PARAM_C
-								+ "_max";//$NON-NLS-1$
+						String minB = LogarithmicTransformation.PARAM_B + "_min";//$NON-NLS-1$
+						String maxB = LogarithmicTransformation.PARAM_B + "_max";//$NON-NLS-1$
+						String minC = LogarithmicTransformation.PARAM_C + "_min";//$NON-NLS-1$
+						String maxC = LogarithmicTransformation.PARAM_C + "_max";//$NON-NLS-1$
 						properties.put(minB, -255);
 						properties.put(maxB, 255);
 						properties.put(minC, -255);
 						properties.put(maxC, 255);
-						FunctionDislpayDialog fdd = new FunctionDislpayDialog(
-								dip, "Logarithmic Transformation",
-								new String[] {
-										LogarithmicTransformation.PARAM_C,
+						FunctionDislpayDialog fdd = new FunctionDislpayDialog(dip,
+								"Logarithmic Transformation",
+								new String[] { LogarithmicTransformation.PARAM_C,
 										LogarithmicTransformation.PARAM_B },
 								properties, trans, true);
 						fdd.setVisible(true);
@@ -189,26 +213,20 @@ public class MenuEnhance extends MenuLoader
 					protected Image perform(Image image)
 					{
 						LogarithmicTransformation trans = LogarithmicTransformation
-								.getInverseLogarithmTransformation(
-										image.getClass(),
+								.getInverseLogarithmTransformation(image.getClass(),
 										255 / Math.log1p(256), 0.0);
 						Properties properties = new Properties();
-						String minB = rs(LogarithmicTransformation.PARAM_B,
-								false);
-						String maxB = rs(LogarithmicTransformation.PARAM_B,
-								true);
-						String minC = rs(LogarithmicTransformation.PARAM_C,
-								false);
-						String maxC = rs(LogarithmicTransformation.PARAM_C,
-								true);
+						String minB = rs(LogarithmicTransformation.PARAM_B, false);
+						String maxB = rs(LogarithmicTransformation.PARAM_B, true);
+						String minC = rs(LogarithmicTransformation.PARAM_C, false);
+						String maxC = rs(LogarithmicTransformation.PARAM_C, true);
 						properties.put(minB, -255);
 						properties.put(maxB, 255);
 						properties.put(minC, -255);
 						properties.put(maxC, 255);
-						FunctionDislpayDialog fdd = new FunctionDislpayDialog(
-								dip, "<Enhance> Inverse Logarithmic",
-								new String[] {
-										LogarithmicTransformation.PARAM_C,
+						FunctionDislpayDialog fdd = new FunctionDislpayDialog(dip,
+								"<Enhance> Inverse Logarithmic",
+								new String[] { LogarithmicTransformation.PARAM_C,
 										LogarithmicTransformation.PARAM_B },
 								properties, trans, true);
 						fdd.setVisible(true);
@@ -225,6 +243,7 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnEnhance.add(mntmInverseLogarithm);
+
 		JMenuItem mntmPowerLaw = new JMenuItem("Power Law");
 		mntmPowerLaw.addActionListener(new ActionListener()
 		{
@@ -237,26 +256,23 @@ public class MenuEnhance extends MenuLoader
 					{
 						PowerLawTransformation trans = PowerLawTransformation
 								.getPowerLawTransformation(image.getClass(),
-										PowerLawTransformation.SCALE_LEVEL - 1,
-										1.0, 0.0);
+										PowerLawTransformation.SCALE_LEVEL - 1, 1.0, 0.0);
 						Properties properties = new Properties();
 						String minB = rs(PowerLawTransformation.PARAM_B, false);
 						String maxB = rs(PowerLawTransformation.PARAM_B, true);
 						String minC = rs(PowerLawTransformation.PARAM_C, false);
 						String maxC = rs(PowerLawTransformation.PARAM_C, true);
-						String minG = rs(PowerLawTransformation.PARAM_GAMMA,
-								false);
-						String maxG = rs(PowerLawTransformation.PARAM_GAMMA,
-								true);
+						String minG = rs(PowerLawTransformation.PARAM_GAMMA, false);
+						String maxG = rs(PowerLawTransformation.PARAM_GAMMA, true);
 						properties.put(minB, -255);
 						properties.put(maxB, 255);
 						properties.put(minC, 0);
 						properties.put(maxC, 512);
 						properties.put(minG, 0.1);
 						properties.put(maxG, 10);
-						FunctionDislpayDialog fdd = new FunctionDislpayDialog(
-								dip, "Power-law Transformation", new String[] {
-										PowerLawTransformation.PARAM_C,
+						FunctionDislpayDialog fdd = new FunctionDislpayDialog(dip,
+								"Power-law Transformation",
+								new String[] { PowerLawTransformation.PARAM_C,
 										PowerLawTransformation.PARAM_B,
 										PowerLawTransformation.PARAM_GAMMA },
 								properties, trans, true);
@@ -274,6 +290,7 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnEnhance.add(mntmPowerLaw);
+
 		JMenuItem mntmInversePowerlaw = new JMenuItem("Inverse Power-law");
 		mntmInversePowerlaw.addActionListener(new ActionListener()
 		{
@@ -286,25 +303,22 @@ public class MenuEnhance extends MenuLoader
 					{
 						PowerLawTransformation trans = PowerLawTransformation
 								.inversePowerLawTransformation(image,
-										PowerLawTransformation.SCALE_LEVEL - 1,
-										1.0, 0.0);
+										PowerLawTransformation.SCALE_LEVEL - 1, 1.0, 0.0);
 						Properties properties = new Properties();
 						String minB = rs(PowerLawTransformation.PARAM_B, false);
 						String maxB = rs(PowerLawTransformation.PARAM_B, true);
 						String minC = rs(PowerLawTransformation.PARAM_C, false);
 						String maxC = rs(PowerLawTransformation.PARAM_C, true);
-						String minG = rs(PowerLawTransformation.PARAM_GAMMA,
-								false);
-						String maxG = rs(PowerLawTransformation.PARAM_GAMMA,
-								true);
+						String minG = rs(PowerLawTransformation.PARAM_GAMMA, false);
+						String maxG = rs(PowerLawTransformation.PARAM_GAMMA, true);
 						properties.put(minB, -255);
 						properties.put(maxB, 255);
 						properties.put(minC, 0);
 						properties.put(maxC, 512);
 						properties.put(minG, 0.1);
 						properties.put(maxG, 10);
-						FunctionDislpayDialog fdd = new FunctionDislpayDialog(
-								dip, "Inverse Power-law Transformation",
+						FunctionDislpayDialog fdd = new FunctionDislpayDialog(dip,
+								"Inverse Power-law Transformation",
 								new String[] { PowerLawTransformation.PARAM_C,
 										PowerLawTransformation.PARAM_B,
 										PowerLawTransformation.PARAM_GAMMA },
@@ -323,6 +337,7 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnEnhance.add(mntmInversePowerlaw);
+
 		JMenuItem mntmPiecewiseLinear = new JMenuItem("Piecewise Linear");
 		mntmPiecewiseLinear.addActionListener(new ActionListener()
 		{
@@ -334,25 +349,17 @@ public class MenuEnhance extends MenuLoader
 					protected Image perform(Image image)
 					{
 						PiecewiseLinearTransformation trans = PiecewiseLinearTransformation
-								.getPiecewiseLinearTransformation(
-										image.getClass(), 50, 100, 150, 200);
+								.getPiecewiseLinearTransformation(image.getClass(), 50, 100, 150,
+										200);
 						Properties properties = new Properties();
-						String minAX = rs(
-								PiecewiseLinearTransformation.PARAM_A_X, false);
-						String maxAX = rs(
-								PiecewiseLinearTransformation.PARAM_A_X, true);
-						String minAY = rs(
-								PiecewiseLinearTransformation.PARAM_A_Y, false);
-						String maxAY = rs(
-								PiecewiseLinearTransformation.PARAM_A_Y, true);
-						String minBX = rs(
-								PiecewiseLinearTransformation.PARAM_B_X, false);
-						String maxBX = rs(
-								PiecewiseLinearTransformation.PARAM_B_X, true);
-						String minBY = rs(
-								PiecewiseLinearTransformation.PARAM_B_Y, false);
-						String maxBY = rs(
-								PiecewiseLinearTransformation.PARAM_B_Y, true);
+						String minAX = rs(PiecewiseLinearTransformation.PARAM_A_X, false);
+						String maxAX = rs(PiecewiseLinearTransformation.PARAM_A_X, true);
+						String minAY = rs(PiecewiseLinearTransformation.PARAM_A_Y, false);
+						String maxAY = rs(PiecewiseLinearTransformation.PARAM_A_Y, true);
+						String minBX = rs(PiecewiseLinearTransformation.PARAM_B_X, false);
+						String maxBX = rs(PiecewiseLinearTransformation.PARAM_B_X, true);
+						String minBY = rs(PiecewiseLinearTransformation.PARAM_B_Y, false);
+						String maxBY = rs(PiecewiseLinearTransformation.PARAM_B_Y, true);
 						properties.put(minAX, 1);
 						properties.put(maxAX, 254);
 						properties.put(minAY, 1);
@@ -361,11 +368,9 @@ public class MenuEnhance extends MenuLoader
 						properties.put(maxBX, 254);
 						properties.put(minBY, 1);
 						properties.put(maxBY, 254);
-						FunctionDislpayDialog fdd = new FunctionDislpayDialog(
-								dip,
+						FunctionDislpayDialog fdd = new FunctionDislpayDialog(dip,
 								"Piecewise Linear Transformation",
-								new String[] {
-										PiecewiseLinearTransformation.PARAM_A_X,
+								new String[] { PiecewiseLinearTransformation.PARAM_A_X,
 										PiecewiseLinearTransformation.PARAM_A_Y,
 										PiecewiseLinearTransformation.PARAM_B_X,
 										PiecewiseLinearTransformation.PARAM_B_Y },
@@ -384,8 +389,10 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnEnhance.add(mntmPiecewiseLinear);
+
 		JMenu mnHistogramStretch = new JMenu("Histogram Stretch");
 		mnEnhance.add(mnHistogramStretch);
+
 		JMenuItem mntmHistogramStretchAverage = new JMenuItem("Average");
 		mntmHistogramStretchAverage.addActionListener(new ActionListener()
 		{
@@ -397,8 +404,7 @@ public class MenuEnhance extends MenuLoader
 					protected Image perform(Image image)
 					{
 						HistogramNormalization trans = HistogramNormalization
-								.getHistogramNormalizatoin(
-										HistogramNormalization.getAverage(),
+								.getHistogramNormalizatoin(HistogramNormalization.getAverage(),
 										image.getClass());
 						Timer t = TestUtils.getTimer();
 						t.start();
@@ -410,6 +416,7 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnHistogramStretch.add(mntmHistogramStretchAverage);
+
 		JMenuItem mntmHistogramStretchQuadratic = new JMenuItem("Quadratic");
 		mntmHistogramStretchQuadratic.addActionListener(new ActionListener()
 		{
@@ -420,11 +427,10 @@ public class MenuEnhance extends MenuLoader
 					@Override
 					protected Image perform(Image image)
 					{
-						Function function = new Quadratic(1.5 / Math
-								.pow(128, 3), -3.0 / 128 / 128, 3.0 / 256);
+						Function function = new Quadratic(1.5 / Math.pow(128, 3), -3.0 / 128 / 128,
+								3.0 / 256);
 						HistogramNormalization trans = HistogramNormalization
-								.getHistogramNormalizatoin(function,
-										image.getClass());
+								.getHistogramNormalizatoin(function, image.getClass());
 						Timer t = TestUtils.getTimer();
 						t.start();
 						Image res = trans.operate(image);
@@ -435,9 +441,10 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnHistogramStretch.add(mntmHistogramStretchQuadratic);
-//		JMenu mnArithmetic = new JMenu("Arithmetic");
-//		loadArithmeticEnhaceItem(mnArithmetic, new Plus(), "Add");
-//		mnEnhance.add(mnArithmetic);
+		//		JMenu mnArithmetic = new JMenu("Arithmetic");
+		//		loadArithmeticEnhaceItem(mnArithmetic, new Plus(), "Add");
+		//		mnEnhance.add(mnArithmetic);
+
 		JMenuItem mntmFakeColor = new JMenuItem("Fake Color");
 		mntmFakeColor.addActionListener(new ActionListener()
 		{
@@ -460,8 +467,7 @@ public class MenuEnhance extends MenuLoader
 						}
 						catch (NumberFormatException e)
 						{
-							SwingUtils.errorMessage(dip,
-									String.format(numberFormatErrorMsg, s));
+							SwingUtils.errorMessage(dip, String.format(numberFormatErrorMsg, s));
 							return null;
 						}
 						s = SwingUtils.inputDialog(dip, "Ratio",
@@ -474,8 +480,7 @@ public class MenuEnhance extends MenuLoader
 						}
 						catch (NumberFormatException e)
 						{
-							SwingUtils.errorMessage(dip,
-									String.format(numberFormatErrorMsg, s));
+							SwingUtils.errorMessage(dip, String.format(numberFormatErrorMsg, s));
 							return null;
 						}
 						FakeColorTransform trans = FakeColorTransform
@@ -485,9 +490,8 @@ public class MenuEnhance extends MenuLoader
 							gi = (GrayImage) image;
 						else
 						{
-							SwingUtils
-									.errorMessage(dip,
-											"The source image of fake color transformation must be a gray image.");
+							SwingUtils.errorMessage(dip,
+									"The source image of fake color transformation must be a gray image.");
 						}
 						Timer t = TestUtils.getTimer();
 						t.start();
@@ -499,16 +503,99 @@ public class MenuEnhance extends MenuLoader
 			}
 		});
 		mnEnhance.add(mntmFakeColor);
+
+		JMenuItem mntmDCP = new JMenuItem("Dark Channel Prior");
+		mntmDCP.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dip.new Performance("Enhance", "Dark Channel Prior")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						String s = SwingUtils.inputDialog(dip, "Radius", "The pattern radius = ", "7");
+						if (s == null)
+							return null;
+						int radius = 7;
+						try
+						{
+							radius = Integer.valueOf(s);
+						}
+						catch (NumberFormatException e1)
+						{
+							e1.printStackTrace();
+							SwingUtils.errorMessage(dip, e1.getLocalizedMessage());
+							return null;
+						}
+						DarkChannelPrior<Image> dcp = (DarkChannelPrior<Image>) DarkChannelPrior.getExtractor(image.getClass());
+						if(radius != 7)
+							dcp.setRadius(radius);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						GrayImage result = dcp.operate(image);
+						time = t.getTime(timeunit);
+						return result;
+					}
+				}.perform();
+			}
+
+		});
+		mnEnhance.add(mntmDCP);
+		
+		JMenuItem mntmDehaze = new JMenuItem("Dehaze");
+		mntmDehaze.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dip.new Performance("Enhance", "Dehaze")
+				{
+					@Override
+					protected Image perform(Image image)
+					{
+						String s = SwingUtils.inputDialog(dip, "Radius", "The pattern radius = ", "7");
+						if (s == null)
+							return null;
+						int radius = 7;
+						try
+						{
+							radius = Integer.valueOf(s);
+						}
+						catch (NumberFormatException e1)
+						{
+							e1.printStackTrace();
+							SwingUtils.errorMessage(dip, e1.getLocalizedMessage());
+							return null;
+						}
+						Dehaze<Image> dehaze = (Dehaze<Image>) Dehaze.getDehazer(image.getClass());
+						if(radius != 7)
+							dehaze.setRadius(radius);
+						Timer t = TestUtils.getTimer();
+						t.start();
+						Image result = dehaze.operate(image);
+						time = t.getTime(timeunit);
+						return result;
+					}
+				}.perform();
+			}
+
+		});
+		mnEnhance.add(mntmDehaze);
 	}
 
 	/**
 	 * Load arithmetic enhance menu item to the specified menu.
+	 * 
 	 * @param menu the specified menu
 	 * @param arithmetic the arithmetic operator
 	 * @param itemName the item name
 	 */
-	protected void loadArithmeticEnhaceItem(JMenu menu,
-			final Arithmetic arithmetic, String itemName)
+	protected void loadArithmeticEnhaceItem(JMenu menu, final Arithmetic arithmetic,
+			String itemName)
 	{
 		JMenuItem item = new JMenuItem(itemName);
 		item.addActionListener(new ActionListener()
@@ -521,8 +608,7 @@ public class MenuEnhance extends MenuLoader
 					protected Image perform(Image image)
 					{
 						// select left image
-						File fileLeft = SwingUtils.selectLoadFile(dip,
-								"Select Left Image");
+						File fileLeft = SwingUtils.selectLoadFile(dip, "Select Left Image");
 						if (fileLeft == null)
 							return null;
 						Image left = null;
@@ -533,16 +619,14 @@ public class MenuEnhance extends MenuLoader
 						catch (IOException e)
 						{
 							e.printStackTrace();
-							SwingUtils.errorMessage(dip,
-									e.getLocalizedMessage());
+							SwingUtils.errorMessage(dip, e.getLocalizedMessage());
 						}
-						ImageDisplayDialog iddLeft = new ImageDisplayDialog(
-								dip, "Left: " + fileLeft.getName(), false, left);
+						ImageDisplayDialog iddLeft = new ImageDisplayDialog(dip,
+								"Left: " + fileLeft.getName(), false, left);
 						iddLeft.pack();
 						iddLeft.setVisible(true);
 						// select right image
-						File fileRight = SwingUtils.selectLoadFile(dip,
-								"Select Right Image");
+						File fileRight = SwingUtils.selectLoadFile(dip, "Select Right Image");
 						if (fileRight == null)
 						{
 							iddLeft.dispose();
@@ -556,17 +640,14 @@ public class MenuEnhance extends MenuLoader
 						catch (IOException e)
 						{
 							e.printStackTrace();
-							SwingUtils.errorMessage(dip,
-									e.getLocalizedMessage());
+							SwingUtils.errorMessage(dip, e.getLocalizedMessage());
 						}
-						ImageDisplayDialog iddRight = new ImageDisplayDialog(
-								dip, "Right: " + fileLeft.getName(), false,
-								left);
+						ImageDisplayDialog iddRight = new ImageDisplayDialog(dip,
+								"Right: " + fileLeft.getName(), false, left);
 						iddRight.pack();
 						iddRight.setVisible(true);
 						// perform arithmetic enhance
-						ArithmeticEnhance enhance = new ArithmeticEnhance(
-								arithmetic);
+						ArithmeticEnhance enhance = new ArithmeticEnhance(arithmetic);
 						Timer t = TestUtils.getTimer();
 						t.start();
 						Image res = enhance.operate(left, right);

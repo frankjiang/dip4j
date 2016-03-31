@@ -134,7 +134,7 @@ public abstract class Image extends AbstractImage implements Cloneable
 	 */
 	public java.awt.image.BufferedImage restore()
 	{
-		return restore(java.awt.image.BufferedImage.TYPE_4BYTE_ABGR);
+		return restore(java.awt.image.BufferedImage.TYPE_INT_ARGB);
 	}
 
 	/**
