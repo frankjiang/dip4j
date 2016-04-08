@@ -5,6 +5,8 @@
  */
 package com.frank.dip;
 
+import java.awt.image.ColorModel;
+
 /**
  * The color image.
  * <p>
@@ -50,10 +52,8 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 * Construct an empty color image instance with specified dimension. The
 	 * image will be a transparent pure black image.
 	 * 
-	 * @param width
-	 *            image width
-	 * @param height
-	 *            image height
+	 * @param width image width
+	 * @param height image height
 	 */
 	public ColorImage(int width, int height)
 	{
@@ -69,25 +69,41 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 * Construct a color image instance with specified dimension and default RGB
 	 * value.
 	 * 
-	 * @param width
-	 *            image width
-	 * @param height
-	 *            image height
-	 * @param rgb
-	 *            the default RGB value
+	 * @param width image width
+	 * @param height image height
+	 * @param rgb the default RGB value
+	 * @param model the color model of the image
 	 */
-	public ColorImage(int width, int height, int rgb)
+	public ColorImage(int width, int height, int rgb, ColorModel model)
 	{
 		this(width, height);
+		byte a = (byte) model.getAlpha(rgb);
+		byte r = (byte) model.getRed(rgb);
+		byte g = (byte) model.getGreen(rgb);
+		byte b = (byte) model.getBlue(rgb);
 		if (width * height != 0 && rgb != 0)
 			for (int y = 0; y < height; y++)
 				for (int x = 0; x < width; x++)
 				{
-					alpha[y][x] = (byte) (rgb >> 24);
-					red[y][x] = (byte) ((rgb >> 16) & 0xff);
-					green[y][x] = (byte) ((rgb >> 8) & 0xff);
-					blue[y][x] = (byte) (rgb & 0xff);
+					alpha[y][x] = a;
+					red[y][x] = r;
+					green[y][x] = g;
+					blue[y][x] = b;
 				}
+	}
+	
+	/**
+	 * Construct a color image instance with specified dimension and default RGB
+	 * array. The initialization for image color will be performed according to
+	 * the RGB array.
+	 * 
+	 * @param width image width
+	 * @param height image height
+	 * @param rgbArray the RGB array
+	 */
+	public ColorImage(int width, int height, int[] rgbArray)
+	{
+		this(width, height, rgbArray, ColorModel.getRGBdefault());
 	}
 
 	/**
@@ -95,20 +111,17 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 * array. The initialization for image color will be performed according to
 	 * the RGB array.
 	 * 
-	 * @param width
-	 *            image width
-	 * @param height
-	 *            image height
-	 * @param rgbArray
-	 *            the RGB array
+	 * @param width image width
+	 * @param height image height
+	 * @param rgbArray the RGB array
+	 * @param model the color model of the image
 	 */
-	public ColorImage(int width, int height, int[] rgbArray)
+	public ColorImage(int width, int height, int[] rgbArray, ColorModel model)
 	{
 		if (rgbArray.length != width * height)
-			throw new IllegalArgumentException(
-					String.format(
-							"The length of input RGB array %d is not match the specified dimension (%d, %d)",
-							rgbArray.length, width, height));
+			throw new IllegalArgumentException(String.format(
+					"The length of input RGB array %d is not match the specified dimension (%d, %d)",
+					rgbArray.length, width, height));
 		alpha = new byte[height][width];
 		red = new byte[height][width];
 		green = new byte[height][width];
@@ -120,10 +133,10 @@ public class ColorImage extends Image implements ColorScaleLevel
 			for (int x = 0; x < width; x++)
 			{
 				rgb = rgbArray[y * width + x];
-				alpha[y][x] = (byte) (rgb >> 24);
-				red[y][x] = (byte) ((rgb >> 16) & 0xff);
-				green[y][x] = (byte) ((rgb >> 8) & 0xff);
-				blue[y][x] = (byte) (rgb & 0xff);
+				alpha[y][x] = (byte) model.getAlpha(rgb);
+				red[y][x] = (byte) model.getRed(rgb);
+				green[y][x] = (byte) model.getGreen(rgb);
+				blue[y][x] = (byte) model.getBlue(rgb);
 			}
 	}
 
@@ -165,8 +178,7 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 * @param observer
 	 *            an object waiting for the image to be loaded.
 	 */
-	public ColorImage(java.awt.Image image,
-			java.awt.image.ImageObserver observer)
+	public ColorImage(java.awt.Image image, java.awt.image.ImageObserver observer)
 	{
 		java.awt.image.BufferedImage bi = null;
 		if (image instanceof java.awt.image.BufferedImage)
@@ -180,25 +192,24 @@ public class ColorImage extends Image implements ColorScaleLevel
 			width = image.getWidth(observer);
 			height = image.getHeight(observer);
 			bi = new java.awt.image.BufferedImage(width, height,
-					java.awt.image.BufferedImage.TYPE_3BYTE_BGR);
+					java.awt.image.BufferedImage.TYPE_4BYTE_ABGR);
 			java.awt.Graphics g = bi.createGraphics();
 			g.drawImage(image, 0, 0, null);
 		}
-		int[] rgbArray = new int[width * height];
-		bi.getRGB(0, 0, width, height, rgbArray, 0, width);
+		ColorModel model = bi.getColorModel();
 		alpha = new byte[height][width];
 		red = new byte[height][width];
 		green = new byte[height][width];
 		blue = new byte[height][width];
-		int rgb;
+		Object rgb;
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
 			{
-				rgb = rgbArray[y * width + x];
-				alpha[y][x] = (byte) (rgb >> 24);
-				red[y][x] = (byte) ((rgb >> 16) & 0xff);
-				green[y][x] = (byte) ((rgb >> 8) & 0xff);
-				blue[y][x] = (byte) (rgb & 0xff);
+				rgb = bi.getRaster().getDataElements(x, y, null);
+				alpha[y][x] = (byte) model.getAlpha(rgb);
+				red[y][x] = (byte) model.getRed(rgb);
+				green[y][x] = (byte) model.getGreen(rgb);
+				blue[y][x] = (byte) model.getBlue(rgb);
 			}
 	}
 
@@ -449,9 +460,8 @@ public class ColorImage extends Image implements ColorScaleLevel
 		int i = 0;
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				array[i++] = (alpha[y][x] & 0xff) << 24
-						| (red[y][x] & 0xff) << 16 | (green[y][x] & 0xff) << 8
-						| (blue[y][x] & 0xff);
+				array[i++] = (alpha[y][x] & 0xff) << 24 | (red[y][x] & 0xff) << 16
+						| (green[y][x] & 0xff) << 8 | (blue[y][x] & 0xff);
 		return array;
 	}
 
@@ -522,8 +532,7 @@ public class ColorImage extends Image implements ColorScaleLevel
 	public int getGray(int x, int y)
 	{
 		checkBounds(x, y);
-		return (int) Math.round(getRed(x, y) * 0.3 + getGreen(x, y) * 0.59
-				+ getBlue(x, y) * 0.11);
+		return (int) Math.round(getRed(x, y) * 0.3 + getGreen(x, y) * 0.59 + getBlue(x, y) * 0.11);
 	}
 
 	/**
@@ -540,7 +549,6 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 * <pre>
 	 * gray = 0.3 * red + 0.59 * green + 0.11 * blue
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @return the gray scale pixels array
@@ -551,8 +559,7 @@ public class ColorImage extends Image implements ColorScaleLevel
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
 				gray[y * width + x] = (int) Math.round((red[y][x] & 0xff) * 0.3
-						+ (green[y][x] & 0xff) * 0.59 + (blue[y][x] & 0xff)
-						* 0.11);
+						+ (green[y][x] & 0xff) * 0.59 + (blue[y][x] & 0xff) * 0.11);
 		return gray;
 	}
 
@@ -585,7 +592,6 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 *  ...
 	 * [(0,h), (1,h), ... , (w, h)]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @return red channel matrix
@@ -624,7 +630,6 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 *  ...
 	 * [(0,h), (1,h), ... , (w, h)]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @return green channel matrix
@@ -663,7 +668,6 @@ public class ColorImage extends Image implements ColorScaleLevel
 	 *  ...
 	 * [(0,h), (1,h), ... , (w, h)]
 	 * </pre>
-	 * 
 	 * </p>
 	 * 
 	 * @return red channel matrix
@@ -689,16 +693,15 @@ public class ColorImage extends Image implements ColorScaleLevel
 	public int getRGB(int x, int y)
 	{
 		checkBounds(x, y);
-		return (alpha[y][x] & 0xff) << 24 | (red[y][x] & 0xff) << 16
-				| (green[y][x] & 0xff) << 8 | (blue[y][x] & 0xff);
+		return (alpha[y][x] & 0xff) << 24 | (red[y][x] & 0xff) << 16 | (green[y][x] & 0xff) << 8
+				| (blue[y][x] & 0xff);
 	}
 
 	/**
 	 * @see com.frank.dip.AbstractImage#subImage(int, int, int, int)
 	 */
 	@Override
-	public ColorImage subImage(int x0, int y0, int xt, int yt)
-			throws ArrayIndexOutOfBoundsException
+	public ColorImage subImage(int x0, int y0, int xt, int yt) throws ArrayIndexOutOfBoundsException
 	{
 		checkBounds(x0, y0);
 		checkBounds(xt, yt);

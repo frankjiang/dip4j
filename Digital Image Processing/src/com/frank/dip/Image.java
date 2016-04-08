@@ -21,7 +21,7 @@ public abstract class Image extends AbstractImage implements Cloneable
 	/**
 	 * serialVersionUID.
 	 */
-	private static final long	serialVersionUID	= -7657370378084638265L;
+	private static final long serialVersionUID = -7657370378084638265L;
 
 	/**
 	 * Construct an empty instance of <tt>Image</tt>.
@@ -111,7 +111,6 @@ public abstract class Image extends AbstractImage implements Cloneable
 	 *  ...
 	 * [(0,h), (1,h), ... , (w, h)]
 	 * </pre>
-	 * 
 	 * </p>
 	 * <strong>Warning:</strong> The returned matrix will be a copy of current
 	 * image. Changing the value of it will not change the source image.
@@ -134,7 +133,7 @@ public abstract class Image extends AbstractImage implements Cloneable
 	 */
 	public java.awt.image.BufferedImage restore()
 	{
-		return restore(java.awt.image.BufferedImage.TYPE_INT_ARGB);
+		return restore(java.awt.image.BufferedImage.TYPE_INT_RGB);
 	}
 
 	/**
@@ -160,8 +159,7 @@ public abstract class Image extends AbstractImage implements Cloneable
 	 */
 	public java.awt.image.BufferedImage restore(int type)
 	{
-		java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(
-				width, height, type);
+		java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(width, height, type);
 		bi.setRGB(0, 0, width, height, getRGBArray(), 0, width);
 		return bi;
 	}
