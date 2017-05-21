@@ -360,6 +360,11 @@ public abstract class Histogram implements ColorScaleLevel
 	}
 
 	/**
+	 * empty constructor 
+	 */
+	protected Histogram() {}
+	
+	/**
 	 * Construct an instance of <tt>Histogram</tt>.
 	 * 
 	 * @param image
